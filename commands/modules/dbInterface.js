@@ -11,6 +11,10 @@ const PSGame = sequelize.define('psgames', {
         unique: true,
     },
     url: Sequelize.STRING,
+    onSale: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+    },
 });
 
 module.exports = {
@@ -46,4 +50,19 @@ module.exports = {
         await game.destroy();
         return title;
     },
+    async checkPS4() {
+        const games = await PSGame.findAll();
+        return (
+            games.map(game => ({
+                url: game.getDataValue('url'),
+                onSale: game.getDataValue('onSale'),
+            })
+            )
+        );
+    },
+    async updateOnSale(url) {
+        const game = await PSGame.findOne({ where: { url: url } });
+        game.setDataValue('onSale', !(game.getDataValue('onSale')));
+        game.save().catch(console.error);
+    }
 };

@@ -3,6 +3,7 @@ const epic = require('./modules/epic');
 const ps = require('./modules/ps4');
 const nintendo = require('./modules/switch');
 const db = require('./modules/dbInterface');
+const update = require('./modules/update');
 
 module.exports = {
 	name: 'deals',
@@ -26,8 +27,8 @@ module.exports = {
 		else if (args[0] === 'epic') {
 			epic.check(message);
 		}
-		else if (args[0] === 'db') {
-			db.testDB(message);
+		else if (args[0] === 'test') {
+			update.updatePS4(message);
 		}
 	},
 };

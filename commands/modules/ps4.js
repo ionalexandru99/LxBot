@@ -7,7 +7,6 @@ module.exports = {
 	async check(message) {
 
 		const messages = [];
-		let games = [];
 
 		const topMenuEmbed = new Discord.MessageEmbed()
 			.setColor('#0099ff')
@@ -19,17 +18,31 @@ module.exports = {
 			.setAuthor('PlayStation 4 Deals', 'https://blog.playstation.com/tachyon/2019/03/pslogo.png');
 
 		function viewGamesEmbed(list) {
-			return (
-				new Discord.MessageEmbed(topMenuEmbed)
-					.setDescription('Here is the list of currently tracked games:'
-						+ '\n\n'
-						+ list.map(game => '- ' + game).sort().join('\n'))
-			);
+			if (list.length > 0) {
+				return (
+					new Discord.MessageEmbed(topMenuEmbed)
+						.setDescription('Here is the list of currently tracked games:'
+							+ '\n\n'
+							+ list.map(game => '- ' + game).sort().join('\n'))
+				);
+			} else {
+				return (
+					new Discord.MessageEmbed(topMenuEmbed)
+						.setDescription('There are currently no tracked games.')
+				);
+			}
 		}
 
 		const editGamesEmbed = new Discord.MessageEmbed(topMenuEmbed)
 			.setDescription('Enter the URL for the game as found on the PlayStation Store'
 				+ '\n\n Example: `https://store.playstation.com/en-us/product/UP0002-CUSA13795_00-CRASHTEAMRACING1`');
+
+		function editGamesSuccessEmbed(name, action) {
+			if (action === 'add')
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully added!');
+			else if (action === 'delete')
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully removed!');
+		}
 
 		async function getGameJSON(url) {
 			const gameUrl = url;
@@ -80,8 +93,7 @@ module.exports = {
 													db.addPS4(game.name, `${collected.first()}`);
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													message.channel.send(game.name + ' successfully added!');
-													console.log(games);
+													message.channel.send(editGamesSuccessEmbed(game.name, 'add'));
 												}
 												);
 										}
@@ -107,10 +119,10 @@ module.exports = {
 												break;
 											default:
 												// Need to check if url exists in list
-												db.deletePS4(`${collected.first()}`).then((gameToDelete) => {
+												db.deletePS4(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													message.channel.send(gameToDelete + ' successfully removed!');
+													message.channel.send(editGamesSuccessEmbed(game, 'delete'));
 												});
 										}
 									})
@@ -134,31 +146,5 @@ module.exports = {
 					message.channel.send('Menu has been closed due to inactivity.');
 				});
 		});
-
-		const url = 'https://store.playstation.com/en-us/product/UP0002-CUSA13795_00-CRASHTEAMRACING1';
-		const { included } = await fetch('https://store.playstation.com/valkyrie-api/en/US/999/resolve/' + url.substring(43)).then(response => response.json());
-		const contentInfo = included[0].attributes;
-		const contentPrice = contentInfo.skus[0].prices;
-
-		let discount;
-		if (contentPrice['plus-user']['discount-percentage'] > contentPrice['non-plus-user']['discount-percentage']) {
-			discount = contentPrice['plus-user'];
-		}
-		else {
-			discount = contentPrice['non-plus-user'];
-		}
-		const discountEndDate = new Date(discount.availability['end-date']);
-
-		const messageEmbed = new Discord.MessageEmbed()
-			.setColor('#0099ff')
-			.setTitle(contentInfo.name)
-			.setURL(url)
-			.setAuthor('PlayStation 4 Deals', 'https://blog.playstation.com/tachyon/2019/03/pslogo.png')
-			.setImage(contentInfo['thumbnail-url-base'])
-			.addField('Regular Price', '~~' + discount['strikethrough-price']['display'] + '~~', true)
-			.addField('Sale Price', discount['actual-price']['display'], true)
-			.addField('Discount', discount['discount-percentage'] + '%', true)
-			.setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
-		// message.channel.send(messageEmbed);
 	},
 };

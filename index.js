@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const db = require('./commands/modules/dbInterface');
 const { prefix, token } = require('./config.json');
 
 const client = new Discord.Client();
@@ -16,6 +17,8 @@ const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
 	console.log('Ready!');
+	db.testDB();
+	db.setUpDB();
 });
 
 // console.log(client.commands);

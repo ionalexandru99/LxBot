@@ -50,15 +50,20 @@ module.exports = {
         await game.destroy();
         return title;
     },
-    async checkPS4() {
-        const games = await PSGame.findAll();
-        return (
-            games.map(game => ({
-                url: game.getDataValue('url'),
-                onSale: game.getDataValue('onSale'),
-            })
-            )
-        );
+    async check(platform) {
+        switch (platform) {
+            case 'ps4':
+                const games = await PSGame.findAll();
+                return (
+                    games.map(game => ({
+                        url: game.getDataValue('url'),
+                        onSale: game.getDataValue('onSale'),
+                    })
+                    )
+                );
+            default:
+                console.error;
+        }
     },
     async updateOnSale(url) {
         const game = await PSGame.findOne({ where: { url: url } });

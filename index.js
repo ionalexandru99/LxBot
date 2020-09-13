@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const db = require('./commands/modules/dbInterface');
+const schedule = require('node-schedule');
 const { prefix, token } = require('./config.json');
 
 const client = new Discord.Client();

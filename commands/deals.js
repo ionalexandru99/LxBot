@@ -28,7 +28,7 @@ module.exports = {
 			epic.check(message);
 		}
 		else if (args[0] === 'test') {
-			update.updatePS4(message);
+			update.update(message, 'ps4');
 		}
 	},
 };

@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const psplus = require('./modules/psplus');
-const epic = require('./modules/epic');
+const schedule = require('./modules/schedule');
 const ps = require('./modules/ps4');
 const nintendo = require('./modules/switch');
 const db = require('./modules/dbInterface');
@@ -28,7 +28,25 @@ module.exports = {
 					nintendo.check(message, channel);
 				}
 				else if (args[0] === 'epic') {
-					epic.check(message, channel);
+					db.manageModule(args[0]).then(active => {
+						if (active) {
+							const messageEmbed = new Discord.MessageEmbed()
+								.setTitle('Module Activation')
+								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+								.setDescription('Epic module is enabled!');
+							message.channel.send(messageEmbed);
+						} else if (!active) {
+							const messageEmbed = new Discord.MessageEmbed()
+								.setTitle('Module Activation')
+								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+								.setDescription('Epic module is disabled!');
+							message.channel.send(messageEmbed);
+						} else {
+							console.error;
+						}
+						schedule.epic(active, channel);
+					});
+					// epic.check(message, channel);
 				}
 				else if (args[0] === 'test') {
 					update.update(channel, 'ps4');

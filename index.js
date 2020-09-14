@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 const db = require('./commands/modules/dbInterface');
 const schedule = require('node-schedule');
 const { prefix, token } = require('./config.json');
+const epic = require('./commands/modules/epic');
+const psplus = require('./commands/modules/psplus');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -15,11 +17,23 @@ for (const file of commandFiles) {
 
 const cooldowns = new Discord.Collection();
 
-
 client.once('ready', () => {
 	console.log('Ready!');
 	db.testDB();
 	db.setUpDB();
+
+	db.checkChannel().then(id => {
+		const channel = client.channels.cache.get(id);
+		// Testing for Monday
+		const epicGamesSchedule = schedule.scheduleJob('0 12 * * 1', () => {
+			epic.check(channel);
+		});
+		// const psPlusSchedule = schedule.scheduleJob('0 12 * * *', () => {
+		// 	psplus.check(channel);
+		// });
+	});
+
+
 });
 
 // console.log(client.commands);
@@ -57,7 +71,10 @@ client.on('message', message => {
 	}
 
 	try {
-		command.execute(message, args);
+		db.checkChannel().then(id => {
+			const channel = client.channels.cache.get(id);
+			command.execute(message, args, channel);
+		});
 	}
 	catch (error) {
 		console.error(error);

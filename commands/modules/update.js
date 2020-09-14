@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 
 module.exports = {
 
-    async update(message, platform) {
+    async update(channel, platform) {
 
         db.check(platform).then(gamesToCheck => {
 
@@ -38,7 +38,7 @@ module.exports = {
                                     .addField('Sale Price', discount['actual-price']['display'], true)
                                     .addField('Discount', discount['discount-percentage'] + '%', true)
                                     .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
-                                message.channel.send(messageEmbed);
+                                channel.send(messageEmbed);
                                 db.updateOnSale(game.url);
                             }
 

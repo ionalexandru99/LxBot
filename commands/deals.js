@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const psplus = require('./modules/psplus');
 const epic = require('./modules/epic');
 const ps = require('./modules/ps4');
@@ -13,22 +14,70 @@ module.exports = {
 	guildOnly: true,
 	cooldown: 5,
 	// aliases: ['icon', 'pfp'],
-	async execute(message, args) {
-		if (args[0] === 'ps4') {
-			ps.check(message);
-		}
-		else if (args[0] === 'ps+' || args[0] === 'psplus') {
-			// Grab RSS feed from PlayStationBlog
-			psplus.check(message);
-		}
-		else if (args[0] === 'switch') {
-			nintendo.check(message);
-		}
-		else if (args[0] === 'epic') {
-			epic.check(message);
-		}
-		else if (args[0] === 'test') {
-			update.update(message, 'ps4');
+	async execute(message, args, channel) {
+
+		if (message.channel === channel) {
+			if (channel || args[0] === 'activate') {
+				if (args[0] === 'ps4') {
+					ps.check(message, channel);
+				}
+				else if (args[0] === 'ps+' || args[0] === 'psplus') {
+					psplus.check(message, channel);
+				}
+				else if (args[0] === 'switch') {
+					nintendo.check(message, channel);
+				}
+				else if (args[0] === 'epic') {
+					epic.check(message, channel);
+				}
+				else if (args[0] === 'test') {
+					update.update(channel, 'ps4');
+				}
+				else if (args[0] === 'activate') {
+					db.addChannel(message.channel).then(savedChannel => {
+						if (savedChannel === 'none') {
+							const messageEmbed = new Discord.MessageEmbed()
+								.setTitle('Channel Activation')
+								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+								.setDescription('**#' + message.channel.name + '** is open for business!');
+							message.channel.send(messageEmbed);
+						} else {
+							console.log(savedChannel);
+							const messageEmbed = new Discord.MessageEmbed()
+								.setTitle('Channel Activation')
+								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+								.setDescription('**#' + savedChannel + '** is currently the active channel!');
+							message.channel.send(messageEmbed);
+						}
+					});
+				}
+				else if (args[0] === 'deactivate') {
+
+					db.deleteChannel().then(
+						channel => {
+							if (channel) {
+								const messageEmbed = new Discord.MessageEmbed()
+									.setTitle('Channel Deactivation')
+									.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+									.setDescription('**#' + channel + '** is closed!');
+								message.channel.send(messageEmbed);
+							} else {
+								const messageEmbed = new Discord.MessageEmbed()
+									.setTitle('Channel Deactivation')
+									.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+									.setDescription('There is currently no active channel!');
+								message.channel.send(messageEmbed);
+							}
+						})
+						.catch(console.error);
+				}
+			} else {
+				const messageEmbed = new Discord.MessageEmbed()
+					.setTitle('Channel Not Specified')
+					.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+					.setDescription('Please enter `~deals activate` in the channel you wish to enable!');
+				message.channel.send(messageEmbed);
+			}
 		}
 	},
 };

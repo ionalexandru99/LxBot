@@ -5,6 +5,14 @@ const sequelize = new Sequelize(dbName, dbUser, dbPass, {
     dialect: 'postgres'
 })
 
+const Channel = sequelize.define('channel', {
+    channelID: {
+        type: Sequelize.BIGINT,
+        unique: true,
+    },
+    name: Sequelize.STRING,
+});
+
 const PSGame = sequelize.define('psgames', {
     title: {
         type: Sequelize.STRING,
@@ -28,7 +36,37 @@ module.exports = {
         }
     },
     async setUpDB() {
-        await PSGame.sync();
+        await sequelize.sync();
+    },
+    async checkChannel() {
+        const channel = await Channel.findOne();
+        if (channel) {
+            return channel.getDataValue('channelID');
+        } else {
+            return 0;
+        }
+    },
+    async addChannel(channel) {
+        const savedChannel = await Channel.findOne();
+        if (!savedChannel) {
+            Channel.create({
+                channelID: channel.id,
+                name: channel.name,
+            });
+            return 'none';
+        } else {
+            return savedChannel.getDataValue('name');;
+        }
+    },
+    async deleteChannel() {
+        const savedChannel = await Channel.findOne();
+        if (savedChannel) {
+            const name = savedChannel.getDataValue('name');
+            await savedChannel.destroy();
+            return name;
+        } else {
+            return savedChannel;
+        }
     },
     async listPS4() {
         const data = await PSGame.findAll();

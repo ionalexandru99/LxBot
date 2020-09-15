@@ -17,7 +17,7 @@ module.exports = {
 				+ '\n 1) View tracked games'
 				+ '\n 2) Add a game'
 				+ '\n 3) Remove a game')
-			.setAuthor('PlayStation 4 Deals', psIcon);
+			.setAuthor('PlayStation Deals', psIcon);
 
 		function viewGamesEmbed(list) {
 			if (list.length > 0) {
@@ -25,7 +25,7 @@ module.exports = {
 					new Discord.MessageEmbed(topMenuEmbed)
 						.setDescription('Here is the list of currently tracked games:'
 							+ '\n\n'
-							+ list.map(game => '- ' + game).sort().join('\n'))
+							+ list.map(game => ':white_small_square: [' + game.title + '](' + game.url + ')' + (game.onSale ? ' `ON SALE`' : '')).sort().join('\n'))
 				);
 			} else {
 				return (
@@ -41,17 +41,24 @@ module.exports = {
 
 		function editGamesSuccessEmbed(name, action) {
 			if (action === 'add')
-				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully added!');
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully added! :white_check_mark:');
 			else if (action === 'delete')
-				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully removed!');
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully removed! :x:');
 		}
 
 		function editGamesFailureEmbed(action) {
 			if (action === 'remove') {
-				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is not on the list!');
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is not on the list! :facepalm:');
 			} else if (action === 'add') {
-				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is already on the list!');
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is already on the list! :facepalm:');
 			}
+		}
+
+		function errorURLEmbed() {
+			return (new Discord.MessageEmbed(topMenuEmbed)
+				.setTitle(':warning: Invalid URL :warning:')
+				.setDescription('Make sure that the URL you entered is from the correct site and that it is complete!')
+			);
 		}
 
 		async function getGameJSON(url) {
@@ -77,7 +84,7 @@ module.exports = {
 					switch (`${collected.first()}`) {
 						// View games
 						case '1':
-							db.listPS4().then(list => {
+							db.listPS().then(list => {
 								messages.push(message.channel.lastMessage);
 								deleteMessages();
 								message.channel.send(viewGamesEmbed(list));
@@ -98,7 +105,7 @@ module.exports = {
 												break;
 											default:
 												getGameJSON(`${collected.first()}`).then(game => {
-													db.addPS4(game.name, `${collected.first()}`).then(name => {
+													db.addPS(game.name, `${collected.first()}`).then(name => {
 														messages.push(message.channel.lastMessage);
 														deleteMessages();
 														if (name !== '') {
@@ -108,7 +115,11 @@ module.exports = {
 														}
 													});
 												}
-												);
+												).catch(() => {
+													messages.push(message.channel.lastMessage);
+													deleteMessages();
+													message.channel.send(errorURLEmbed())
+												});
 										}
 									})
 									.catch(collected => {
@@ -131,7 +142,7 @@ module.exports = {
 												message.channel.send('Menu closed.');
 												break;
 											default:
-												db.deletePS4(`${collected.first()}`).then((game) => {
+												db.deletePS(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
 													if (game !== '') {

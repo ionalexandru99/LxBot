@@ -6,6 +6,7 @@ const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../
 module.exports = {
 
     async psUpdate(channel) {
+        console.log('Checking for sale updates for tracked PS titles...');
 
         db.check('ps4').then(gamesToCheck => {
 
@@ -49,6 +50,7 @@ module.exports = {
                 }
             });
         });
+        console.log('PS update complete!');
     },
     async eshopUpdate(channel) {
 

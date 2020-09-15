@@ -32,7 +32,7 @@ const PSGame = sequelize.define('psgames', {
         defaultValue: false,
     },
 });
-const SwitchGame = sequelize.define('switchgames', {
+const EShopGame = sequelize.define('eshopgames', {
     title: {
         type: Sequelize.STRING,
         unique: true,
@@ -157,15 +157,15 @@ module.exports = {
             }).catch(console.error);
         }
     },
-    async listPS4() {
+    async listPS() {
         const data = await PSGame.findAll();
         const list = [];
         data.forEach(entry => {
-            list.push(entry.getDataValue('title'));
+            list.push(entry);
         });
         return list;
     },
-    async addPS4(gameTitle, gameUrl) {
+    async addPS(gameTitle, gameUrl) {
         const game = await PSGame.findOne({ where: { url: gameUrl } });
         if (game) {
             return '';
@@ -177,7 +177,7 @@ module.exports = {
             return gameTitle;
         }
     },
-    async deletePS4(url) {
+    async deletePS(url) {
         const game = await PSGame.findOne({ where: { url: url } });
         if (game) {
             const title = game.getDataValue('title');
@@ -187,28 +187,28 @@ module.exports = {
             return '';
         }
     },
-    async listSwitch() {
-        const data = await SwitchGame.findAll();
+    async listEShop() {
+        const data = await EShopGame.findAll();
         const list = [];
         data.forEach(entry => {
-            list.push(entry.getDataValue('title'));
+            list.push(entry);
         });
         return list;
     },
-    async addSwitch(gameTitle, gameUrl) {
-        const game = await SwitchGame.findOne({ where: { url: gameUrl } });
+    async addEShop(gameTitle, gameUrl) {
+        const game = await EShopGame.findOne({ where: { url: gameUrl } });
         if (game) {
             return '';
         } else {
-            SwitchGame.create({
+            EShopGame.create({
                 title: gameTitle,
                 url: gameUrl
             });
             return gameTitle;
         }
     },
-    async deleteSwitch(url) {
-        const game = await SwitchGame.findOne({ where: { url: url } });
+    async deleteEShop(url) {
+        const game = await EShopGame.findOne({ where: { url: url } });
         if (game) {
             const title = game.getDataValue('title');
             await game.destroy();
@@ -219,9 +219,9 @@ module.exports = {
     },
     async check(platform) {
         let games;
-        if (platform === 'ps4') {
+        if (platform === 'ps') {
             games = await PSGame.findAll();
-        } else if (platform === 'switch') {
+        } else if (platform === 'eshop') {
             games = await SwitchGame.findAll();
         }
         else {
@@ -236,10 +236,10 @@ module.exports = {
     },
     async updateOnSale(platform, url) {
         let game;
-        if (platform === 'ps4') {
+        if (platform === 'ps') {
             game = await PSGame.findOne({ where: { url: url } });
-        } else if (platform === 'switch') {
-            game = await SwitchGame.findOne({ where: { url: url } });
+        } else if (platform === 'eshop') {
+            game = await EShopGame.findOne({ where: { url: url } });
         }
         else {
             console.error;

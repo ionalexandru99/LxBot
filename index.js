@@ -32,6 +32,7 @@ client.once('ready', () => {
 // console.log(client.commands);
 
 client.on('message', message => {
+
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
@@ -41,6 +42,10 @@ client.on('message', message => {
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
+
+	if (command.guildOnly && message.channel.type === 'dm') {
+		return message.reply("You're not allowed to slide into my DMs");
+	}
 
 	if (command.args && !args.length) {
 		return message.channel.send(`You didn't provide any arguments, ${message.author}!`);

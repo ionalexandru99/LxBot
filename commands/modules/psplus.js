@@ -9,7 +9,6 @@ const parser = new Parser();
 module.exports = {
 
 	async check(channel) {
-
 		const article = (await parser.parseURL(psPlusURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 

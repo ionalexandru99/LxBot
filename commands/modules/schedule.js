@@ -8,7 +8,7 @@ let psPlusSchedule;
 
 module.exports = {
 
-    async epic(active, channel) {
+    epic(active, channel) {
         if (active) {
             epicSchedule = schedule.scheduleJob('0 12 * * 4', function () {
                 epic.check(channel);
@@ -23,7 +23,7 @@ module.exports = {
             console.error();
         }
     },
-    async psplus(active, channel) {
+    psplus(active, channel) {
         if (active) {
             psPlusSchedule = schedule.scheduleJob('0 * * * *', function () {
                 psplus.check(channel);
@@ -38,10 +38,16 @@ module.exports = {
             console.error();
         }
     },
-    async trackedGames(channel) {
-        gamesSchedule = schedule.scheduleJob('0 * * * *', function () {
-            updater.psUpdate(channel);
-            updater.eshopUpdate(channel);
+    trackedGames(channel) {
+        gamesSchedule = schedule.scheduleJob('0 * * * *', async function () {
+            console.log('Checking for sale updates for tracked PS titles...');
+            await updater.psUpdate(channel);
+            console.log('PS update complete!');
+
+            console.log('Checking for sale updates for tracked eShop titles...');
+            await updater.eshopUpdate(channel);
+            console.log('eShop update complete!');
+
         });
         console.log('Tracked Games schedule on');
     },

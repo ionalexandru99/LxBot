@@ -10,10 +10,13 @@ module.exports = {
 	execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
+
+		// Embed skeleton
 		const helpEmbed = new Discord.MessageEmbed()
 			.setTitle('Commands')
 			.setAuthor('Tom Nook\'s Help Desk');
 
+		// Grab all commands for default message
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
 			data.push(commands.map(command => command.name).join(', '));
@@ -23,13 +26,16 @@ module.exports = {
 			return message.channel.send(helpEmbed);
 		}
 
+		// Grab help info about a specific command
 		const name = args[0].toLowerCase();
 		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
+		// Check if command exists
 		if (!command) {
 			return message.reply('that\'s not a valid command!');
 		}
 
+		// Grab command info
 		data.push(`**Name:** ${command.name}`);
 
 		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);

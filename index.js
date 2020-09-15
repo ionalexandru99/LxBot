@@ -20,12 +20,12 @@ client.once('ready', () => {
 	db.testDB();
 	db.setUpDB();
 
-	db.checkChannel().then(id => {
+	db.getChannel().then(id => {
 		const channel = client.channels.cache.get(id);
 
 		db.checkModule('epic').then(isActive => schedule.epic(isActive, channel));
 		db.checkModule('psplus').then(isActive => schedule.psplus(isActive, channel));
-		schedule.trackedGames(channel);
+		schedule.trackedTitles(channel);
 	});
 });
 
@@ -33,20 +33,25 @@ client.once('ready', () => {
 
 client.on('message', message => {
 
+	// Check for prefix
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+	// Grab command from message
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
+	// Check if command exists
 	const command = client.commands.get(commandName)
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
 
+	// Prevent direct messages
 	if (command.guildOnly && message.channel.type === 'dm') {
 		return message.reply("You're not allowed to slide into my DMs");
 	}
 
+	// Check if arguments were sent when needed
 	if (command.args && !args.length) {
 		return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
 	}
@@ -68,8 +73,9 @@ client.on('message', message => {
 		}
 	}
 
+	// Execute command
 	try {
-		db.checkChannel().then(id => {
+		db.getChannel().then(id => {
 			const channel = client.channels.cache.get(id);
 			command.execute(message, args, channel);
 		});

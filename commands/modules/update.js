@@ -6,12 +6,12 @@ const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../
 module.exports = {
 
     async psUpdate(channel) {
-        console.log('Checking for sale updates for tracked PS titles...');
-
-        db.check('ps4').then(gamesToCheck => {
+        //Check PlayStation titles
+        db.check('ps').then(gamesToCheck => {
 
             gamesToCheck.forEach(async function (game) {
 
+                //Grab price info
                 const { included } = await fetch(psStoreURL + game.url.substring(43)).then(response => response.json());
                 const contentInfo = included[0].attributes;
                 const contentPrice = contentInfo.skus[0].prices;
@@ -19,6 +19,7 @@ module.exports = {
                 if (contentPrice['plus-user']['discount-percentage'] !== 0 || contentPrice['non-plus-user']['discount-percentage'] !== 0) {
                     // Discount available
                     if (game.onSale === false) {
+                        // Calculate discount if title does not have onSale status
                         let discount;
                         if (contentPrice['plus-user']['discount-percentage'] > contentPrice['non-plus-user']['discount-percentage']) {
                             discount = contentPrice['plus-user'];
@@ -28,33 +29,34 @@ module.exports = {
                         }
                         const discountEndDate = new Date(discount.availability['end-date']);
 
+                        // Create embed
                         const messageEmbed = new Discord.MessageEmbed()
                             .setColor('#0099ff')
                             .setTitle(contentInfo.name)
                             .setURL(game.url)
-                            .setAuthor('PlayStation 4 Deals', psIcon)
+                            .setAuthor('PlayStation Deals', psIcon)
                             .setImage(contentInfo['thumbnail-url-base'])
                             .addField('Regular Price', '~~' + discount['strikethrough-price']['display'] + '~~', true)
                             .addField('Sale Price', discount['actual-price']['display'], true)
                             .addField('Discount', discount['discount-percentage'] + '%', true)
                             .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
                         channel.send(messageEmbed);
-                        db.updateOnSale('ps4', game.url);
+                        db.updateOnSale('ps', game.url);
                     }
 
                 } else {
-                    // No discount
+                    // No discount available
                     if (game.onSale === true) {
-                        db.updateOnSale('ps4', game.url);
+                        db.updateOnSale('ps', game.url);
                     }
                 }
             });
         });
-        console.log('PS update complete!');
     },
     async eshopUpdate(channel) {
 
-        db.check('switch').then(gamesToCheck => {
+        // Check Nintendo eShop titles
+        db.check('eshop').then(gamesToCheck => {
 
             gamesToCheck.forEach(async function (game) {
 
@@ -80,6 +82,8 @@ module.exports = {
                 const { prices } = await fetch(eshopURL + gameId).then(response => response.json());
 
                 const regularPrice = Number.parseFloat(prices[0].regular_price.amount.substring(1));
+
+                //Calculate discount if applicable
                 let discountEndDate;
                 let discountPrice;
                 let discount = 0;
@@ -93,24 +97,25 @@ module.exports = {
                 if (discount !== 0) {
                     // Discount available
                     if (game.onSale === false) {
+                        // Create embed
                         const messageEmbed = new Discord.MessageEmbed()
                             .setColor('#E60012')
                             .setTitle(gameTitle)
                             .setURL(game.url)
-                            .setAuthor('Nintendo Switch Deals', switchIcon)
+                            .setAuthor('Nintendo eShop Deals', switchIcon)
                             .setImage(imageURL)
                             .addField('Regular Price', '~~$' + regularPrice + '~~', true)
                             .addField('Sale Price', '$' + discountPrice, true)
                             .addField('Discount', discount.toPrecision(2) + '%', true)
                             .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
                         channel.send(messageEmbed);
-                        db.updateOnSale('switch', game.url);
+                        db.updateOnSale('eshop', game.url);
                     }
 
                 } else {
-                    // No discount
+                    // No discount available
                     if (game.onSale === true) {
-                        db.updateOnSale('switch', game.url);
+                        db.updateOnSale('eshop', game.url);
                     }
                 }
             });

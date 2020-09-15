@@ -5,6 +5,7 @@ const sequelize = new Sequelize(dbName, dbUser, dbPass, {
     dialect: 'postgres'
 });
 
+// Model definitions
 const Channel = sequelize.define('channel', {
     channelID: {
         type: Sequelize.BIGINT,
@@ -12,7 +13,6 @@ const Channel = sequelize.define('channel', {
     },
     name: Sequelize.STRING,
 });
-
 const Module = sequelize.define('module', {
     name: {
         type: Sequelize.STRING,
@@ -20,7 +20,6 @@ const Module = sequelize.define('module', {
     },
     enabled: Sequelize.BOOLEAN,
 });
-
 const PSGame = sequelize.define('psgames', {
     title: {
         type: Sequelize.STRING,
@@ -43,7 +42,6 @@ const EShopGame = sequelize.define('eshopgames', {
         defaultValue: false,
     },
 });
-
 const PSPlus = sequelize.define('psplus', {
     url: {
         type: Sequelize.STRING,
@@ -53,6 +51,7 @@ const PSPlus = sequelize.define('psplus', {
 
 module.exports = {
 
+    // Test database connection
     async testDB() {
         try {
             await sequelize.authenticate();
@@ -61,6 +60,7 @@ module.exports = {
             console.error('Unable to connect to the database:', error);
         }
     },
+    // Set up database with initial tables
     async setUpDB() {
         await sequelize.sync();
         await Module.findOrCreate(
@@ -74,7 +74,6 @@ module.exports = {
                 }
             },
         );
-
         await Module.findOrCreate(
             {
                 where: {
@@ -87,7 +86,8 @@ module.exports = {
             },
         );
     },
-    async checkChannel() {
+    // Get saved channel ID
+    async getChannel() {
         const channel = await Channel.findOne();
         if (channel) {
             return channel.getDataValue('channelID');
@@ -95,6 +95,7 @@ module.exports = {
             return 0;
         }
     },
+    // Add channel ID
     async addChannel(channel) {
         const savedChannel = await Channel.findOne();
         if (!savedChannel) {
@@ -107,6 +108,7 @@ module.exports = {
             return savedChannel.getDataValue('name');;
         }
     },
+    // Delete channel ID
     async deleteChannel() {
         const savedChannel = await Channel.findOne();
         if (savedChannel) {
@@ -117,6 +119,8 @@ module.exports = {
             return savedChannel;
         }
     },
+
+    // Check status of a module
     async checkModule(moduleName) {
         return await Module.findOne({ where: { 'name': moduleName } }).then(module => {
             if (module) {
@@ -126,6 +130,7 @@ module.exports = {
             }
         });
     },
+    // Enable or disable a module
     async manageModule(moduleName) {
         return await Module.findOne({ where: { 'name': moduleName } }).then(module => {
             if (module) {
@@ -138,7 +143,9 @@ module.exports = {
         }
         );
     },
-    async checkPsPlus() {
+
+    // Get saved PS Plus article
+    async getPsPlus() {
         const savedArticle = await PSPlus.findOne().catch(console.error);
         if (savedArticle) {
             return savedArticle.getDataValue('url');
@@ -146,7 +153,8 @@ module.exports = {
             return '';
         }
     },
-    async setPsPlus(url) {
+    // Update saved PS Plus article
+    async updatePsPlus(url) {
         const article = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
         if (article) {
             article.setDataValue('url', url);
@@ -157,6 +165,8 @@ module.exports = {
             }).catch(console.error);
         }
     },
+
+    // List all tracked PlayStation title
     async listPS() {
         const data = await PSGame.findAll();
         const list = [];
@@ -165,6 +175,7 @@ module.exports = {
         });
         return list;
     },
+    // Add a PlayStation title to track
     async addPS(gameTitle, gameUrl) {
         const game = await PSGame.findOne({ where: { url: gameUrl } });
         if (game) {
@@ -177,6 +188,7 @@ module.exports = {
             return gameTitle;
         }
     },
+    // Delete a tracked PlayStation title
     async deletePS(url) {
         const game = await PSGame.findOne({ where: { url: url } });
         if (game) {
@@ -187,6 +199,8 @@ module.exports = {
             return '';
         }
     },
+
+    // List all tracked Nintendo eShop titles
     async listEShop() {
         const data = await EShopGame.findAll();
         const list = [];
@@ -195,6 +209,7 @@ module.exports = {
         });
         return list;
     },
+    // Add a Nintendo eShop title to track
     async addEShop(gameTitle, gameUrl) {
         const game = await EShopGame.findOne({ where: { url: gameUrl } });
         if (game) {
@@ -207,6 +222,7 @@ module.exports = {
             return gameTitle;
         }
     },
+    // Delete a tracked Nintendo eShop title
     async deleteEShop(url) {
         const game = await EShopGame.findOne({ where: { url: url } });
         if (game) {
@@ -217,6 +233,8 @@ module.exports = {
             return '';
         }
     },
+
+    // Grab list of tracked titles to check
     async check(platform) {
         let games;
         if (platform === 'ps') {
@@ -234,6 +252,7 @@ module.exports = {
         )
         );
     },
+    // Update a title's onSale status
     async updateOnSale(platform, url) {
         let game;
         if (platform === 'ps') {

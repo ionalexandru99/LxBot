@@ -9,10 +9,11 @@ const parser = new Parser();
 module.exports = {
 
 	async check(channel) {
+		//Grab latest article from RSS feed
 		const article = (await parser.parseURL(psPlusURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 
-		db.checkPsPlus().then(articleSaved => {
+		db.getPsPlus().then(articleSaved => {
 			if (articleSaved !== article.link) {
 
 				// Grab article image
@@ -21,6 +22,7 @@ module.exports = {
 				const imageEnd = imageURL.search('"');
 				imageURL = imageURL.substring(0, imageEnd);
 
+				// Create embed
 				const messageEmbed = new Discord.MessageEmbed()
 					.setTitle(article.title)
 					.setURL(article.link)
@@ -30,7 +32,7 @@ module.exports = {
 					.setDescription(article.contentSnippet);
 
 				channel.send(messageEmbed);
-				db.setPsPlus(article.link);
+				db.updatePsPlus(article.link);
 			}
 		});
 	},

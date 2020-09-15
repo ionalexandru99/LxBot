@@ -3,13 +3,13 @@ const fetch = require('node-fetch');
 const db = require('./dbInterface');
 const { psIcon, psStoreURL } = require('../../config.json');
 
-
 module.exports = {
 
-	async check(message) {
+	async menu(message) {
 
 		const messages = [];
 
+		// Embed skeleton
 		const topMenuEmbed = new Discord.MessageEmbed()
 			.setColor('#0099ff')
 			.setDescription('Choose an action to take by typing a number to execute your requested action. Type **exit** to cancel.'
@@ -19,6 +19,7 @@ module.exports = {
 				+ '\n 3) Remove a game')
 			.setAuthor('PlayStation Deals', psIcon);
 
+		// Embed for viewing list of tracked games
 		function viewGamesEmbed(list) {
 			if (list.length > 0) {
 				return (
@@ -35,10 +36,12 @@ module.exports = {
 			}
 		}
 
+		// Embed for list editing
 		const editGamesEmbed = new Discord.MessageEmbed(topMenuEmbed)
 			.setDescription('Enter the URL for the game as found on the PlayStation Store'
 				+ '\n\n Example: `https://store.playstation.com/en-us/product/UP0002-CUSA13795_00-CRASHTEAMRACING1`');
 
+		// Embed for successful list editing
 		function editGamesSuccessEmbed(name, action) {
 			if (action === 'add')
 				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully added! :white_check_mark:');
@@ -46,6 +49,7 @@ module.exports = {
 				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully removed! :x:');
 		}
 
+		// Embed for unsuccessful list editing
 		function editGamesFailureEmbed(action) {
 			if (action === 'remove') {
 				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is not on the list! :facepalm:');
@@ -54,6 +58,7 @@ module.exports = {
 			}
 		}
 
+		// Embed for invalid URL
 		function errorURLEmbed() {
 			return (new Discord.MessageEmbed(topMenuEmbed)
 				.setTitle(':warning: Invalid URL :warning:')
@@ -61,18 +66,23 @@ module.exports = {
 			);
 		}
 
+		// Grab game info
 		async function getGameJSON(url) {
 			const gameUrl = url;
 			const { included } = await fetch(psStoreURL + gameUrl.substring(43)).then(response => response.json());
 			return included[0].attributes;
 		}
 
+		// Delete message stack when done
 		function deleteMessages() {
 			messages.forEach(obj => obj.delete().catch(console.error));
 		}
+
+		// Filter for menu navigation
 		const mainFilter = response => {
 			return response.content === '1' || response.content === '2' || response.content === '3' || response.content == 'exit';
 		};
+		// Filter for list editing
 		const editFilter = response => {
 			return response.content.includes('https://store.playstation.com') || response.content == 'exit';
 		};
@@ -82,7 +92,7 @@ module.exports = {
 			message.channel.awaitMessages(mainFilter, { max: 1, time: 15000, errors: ['time'] })
 				.then(collected => {
 					switch (`${collected.first()}`) {
-						// View games
+						// View list of tracked titles
 						case '1':
 							db.listPS().then(list => {
 								messages.push(message.channel.lastMessage);
@@ -90,7 +100,7 @@ module.exports = {
 								message.channel.send(viewGamesEmbed(list));
 							});
 							break;
-						// Add games
+						// Add a title to be tracked
 						case '2':
 							messages.push(message.channel.lastMessage);
 							message.channel.send(editGamesEmbed).then((msg) => {
@@ -98,16 +108,19 @@ module.exports = {
 								message.channel.awaitMessages(editFilter, { max: 1, time: 15000, errors: ['time'] })
 									.then(collected => {
 										switch (`${collected.first()}`) {
+											// Exit menu
 											case 'exit':
 												messages.push(message.channel.lastMessage);
 												deleteMessages();
 												message.channel.send('Menu closed.');
 												break;
 											default:
+												// Check if URL is valid
 												getGameJSON(`${collected.first()}`).then(game => {
 													db.addPS(game.name, `${collected.first()}`).then(name => {
 														messages.push(message.channel.lastMessage);
 														deleteMessages();
+														// Check if title is already on tracked list
 														if (name !== '') {
 															message.channel.send(editGamesSuccessEmbed(name, 'add'));
 														} else {
@@ -128,7 +141,7 @@ module.exports = {
 									})
 							});
 							break;
-						// Remove games
+						// Remove a title from being tracked
 						case '3':
 							messages.push(message.channel.lastMessage);
 							message.channel.send(editGamesEmbed).then((msg) => {
@@ -136,6 +149,7 @@ module.exports = {
 								message.channel.awaitMessages(editFilter, { max: 1, time: 15000, errors: ['time'] })
 									.then(collected => {
 										switch (`${collected.first()}`) {
+											// Exit menu
 											case 'exit':
 												messages.push(message.channel.lastMessage);
 												deleteMessages();
@@ -145,6 +159,7 @@ module.exports = {
 												db.deletePS(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
+													// Check if the title is on the tracked list
 													if (game !== '') {
 														message.channel.send(editGamesSuccessEmbed(game, 'delete'));
 													} else {
@@ -159,6 +174,7 @@ module.exports = {
 									})
 							});
 							break;
+						// Exit menu
 						case 'exit':
 							messages.push(message.channel.lastMessage);
 							deleteMessages();

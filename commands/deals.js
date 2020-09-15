@@ -21,14 +21,16 @@ module.exports = {
 		+ '\n',
 
 	args: true,
-	// usage: '<user> <role>',
 	guildOnly: true,
 	cooldown: 5,
-	// aliases: ['icon', 'pfp'],
 
 	async execute(message, args, channel) {
 
-		function messageEmbed(module, active) {
+		// Embed skeleton
+		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', configIcon);
+
+		// Embed for module management
+		function moduleEmbed(module, active) {
 			return (
 				new Discord.MessageEmbed()
 					.setTitle('Module Management')
@@ -37,8 +39,7 @@ module.exports = {
 			);
 		}
 
-		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', configIcon);
-
+		// Embed for channel activation
 		function activateChannel(message) {
 			db.addChannel(message.channel).then(savedChannel => {
 
@@ -54,6 +55,7 @@ module.exports = {
 				}
 			});
 		}
+		//Embed for channel deactivation
 		function deactivateChannel(message) {
 			db.deleteChannel().then(
 				channel => {
@@ -69,26 +71,34 @@ module.exports = {
 				})
 				.catch(console.error);
 		}
+
+		// Start of argument parsing
 		if (channel) {
+			//Allow channel deactivation from any channel (in case of deleted channel)
 			if (args[0] === 'deactivate') {
 				deactivateChannel(message);
 			}
 			else if (message.channel === channel) {
+				// Only proceed if the message comes from the activated channel
 				if (args[0] === 'ps') {
-					ps.check(message, channel);
+					// PlayStation 
+					ps.menu(message, channel);
 				}
 				else if (args[0] === 'ps+' || args[0] === 'psplus') {
+					// PlayStation Plus
 					db.manageModule('psplus').then(active => {
-						message.channel.send(messageEmbed('psplus', active)).catch(console.error);
+						message.channel.send(moduleEmbed('psplus', active)).catch(console.error);
 						schedule.psplus(active, channel);
 					});
 				}
 				else if (args[0] === 'eshop') {
-					nintendo.check(message, channel);
+					// Nintendo eShop
+					nintendo.menu(message, channel);
 				}
 				else if (args[0] === 'epic') {
+					// Epic Games
 					db.manageModule(args[0]).then(active => {
-						message.channel.send(messageEmbed(args[0], active)).catch(console.error);
+						message.channel.send(moduleEmbed(args[0], active)).catch(console.error);
 						schedule.epic(active, channel);
 					});
 				}
@@ -96,17 +106,18 @@ module.exports = {
 					// Test argument
 				}
 				else if (args[0] === 'activate') {
+					// Activate current channel
 					activateChannel(message);
 				}
 			}
 		} else if (args[0] === 'activate') {
+			// Activate current channel
 			activateChannel(message);
 		} else {
+			// Channel has not been activated
 			configEmbed.setTitle('Channel Not Specified')
 				.setDescription('Please use the `activate` argument in the channel you wish to enable!');
 			message.channel.send(configEmbed);
 		}
 	},
 };
-
-// Icons made by < a href = "https://www.flaticon.com/authors/freepik" title = "Freepik" > Freepik</a > from < a href = "https://www.flaticon.com/" title = "Flaticon" > www.flaticon.com</a >

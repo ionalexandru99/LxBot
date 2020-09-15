@@ -1,8 +1,10 @@
 const schedule = require('node-schedule');
-const db = require('./dbInterface');
+// const db = require('./dbInterface');
 const epic = require('./epic');
+const psplus = require('./psplus');
 
 let epicSchedule;
+let psPlusSchedule;
 
 module.exports = {
 
@@ -19,6 +21,21 @@ module.exports = {
             console.log('Epic Games schedule off');
         } else {
             console.error();
+        }
+    },
+    async psplus(active, channel) {
+        if (active) {
+            psPlusSchedule = schedule.scheduleJob('0 * * * *', function () {
+                psplus.check(channel);
+            });
+            console.log('PlayStation Plus schedule on');
+        } else if (!active) {
+            if (psPlusSchedule) {
+                psPlusSchedule.cancel();
+            }
+            console.log('PlayStation Plus schedule off');
+        } else {
+            // console.error();
         }
     },
 };

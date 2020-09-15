@@ -14,7 +14,10 @@ const Channel = sequelize.define('channel', {
 });
 
 const Module = sequelize.define('module', {
-    name: Sequelize.STRING,
+    name: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
     enabled: Sequelize.BOOLEAN,
 });
 
@@ -30,6 +33,13 @@ const PSGame = sequelize.define('psgames', {
     },
 });
 
+const PSPlus = sequelize.define('psplus', {
+    url: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
+});
+
 module.exports = {
 
     async testDB() {
@@ -42,19 +52,29 @@ module.exports = {
     },
     async setUpDB() {
         await sequelize.sync();
-        await Module.findOrCreate({
-            where: {
-                name: "epic",
-                enabled: false,
-            }
-        });
+        await Module.findOrCreate(
+            {
+                where: {
+                    name: "epic",
+                },
+                defaults: {
+                    name: "epic",
+                    enabled: false,
+                }
+            },
+        );
 
-        await Module.findOrCreate({
-            where: {
-                name: "psplus",
-                enabled: false,
-            }
-        });
+        await Module.findOrCreate(
+            {
+                where: {
+                    name: "psplus",
+                },
+                defaults: {
+                    name: "psplus",
+                    enabled: false,
+                }
+            },
+        );
     },
     async checkChannel() {
         const channel = await Channel.findOne();
@@ -106,16 +126,27 @@ module.exports = {
             }
         }
         );
-
-
-        // const module = await Module.findOne({ where: { 'name': moduleName } });
-        // if (module) {
-        //     module.setDataValue('enabled', !(module.getDataValue('enabled')));
-        //     module.save().catch(console.error);
-        //     return module.getDataValue('enabled');
-        // } else {
-        //     return null;
-        // }
+    },
+    async checkPsPlus() {
+        const savedArticle = await PSPlus.findOne().catch(console.error);
+        if (savedArticle) {
+            return savedArticle.getDataValue('url');
+        } else {
+            return '';
+        }
+    },
+    async setPsPlus(url) {
+        const article = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
+        // console.log(article);
+        if (article) {
+            article.setDataValue('url', url);
+            article.save().catch(console.error);
+        } else {
+            PSPlus.create({
+                url: url,
+            }).catch(console.error);
+        }
+        // console.log('test');
     },
     async listPS4() {
         const data = await PSGame.findAll();

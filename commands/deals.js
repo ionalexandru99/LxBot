@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const psplus = require('./modules/psplus');
 const schedule = require('./modules/schedule');
 const ps = require('./modules/ps4');
 const nintendo = require('./modules/switch');
@@ -14,7 +13,17 @@ module.exports = {
 	guildOnly: true,
 	cooldown: 5,
 	// aliases: ['icon', 'pfp'],
+
 	async execute(message, args, channel) {
+
+		function messageEmbed(module, active) {
+			return (
+				new Discord.MessageEmbed()
+					.setTitle('Module Activation')
+					.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
+					.setDescription(module.toUpperCase() + ' module is ' + (active ? 'activated' : 'deactivated') + '!')
+			);
+		}
 
 		if (message.channel === channel) {
 			if (channel || args[0] === 'activate') {
@@ -22,31 +31,19 @@ module.exports = {
 					ps.check(message, channel);
 				}
 				else if (args[0] === 'ps+' || args[0] === 'psplus') {
-					psplus.check(message, channel);
+					db.manageModule('psplus').then(active => {
+						message.channel.send(messageEmbed('psplus', active)).catch(console.error);
+						schedule.psplus(active, channel);
+					});
 				}
 				else if (args[0] === 'switch') {
 					nintendo.check(message, channel);
 				}
 				else if (args[0] === 'epic') {
 					db.manageModule(args[0]).then(active => {
-						if (active) {
-							const messageEmbed = new Discord.MessageEmbed()
-								.setTitle('Module Activation')
-								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
-								.setDescription('Epic module is enabled!');
-							message.channel.send(messageEmbed);
-						} else if (!active) {
-							const messageEmbed = new Discord.MessageEmbed()
-								.setTitle('Module Activation')
-								.setAuthor('Tom Nook Configuration', 'https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png')
-								.setDescription('Epic module is disabled!');
-							message.channel.send(messageEmbed);
-						} else {
-							console.error;
-						}
+						message.channel.send(messageEmbed(args[0], active)).catch(console.error);
 						schedule.epic(active, channel);
 					});
-					// epic.check(message, channel);
 				}
 				else if (args[0] === 'test') {
 					update.update(channel, 'ps4');

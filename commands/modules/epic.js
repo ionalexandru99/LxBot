@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const { epicFreeURL, epicGameURL, epicIcon, epicStoreURL } = require('../../config.json');
 
-
 module.exports = {
 
 	async check(channel) {

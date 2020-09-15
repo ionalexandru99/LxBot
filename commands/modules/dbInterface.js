@@ -157,16 +157,27 @@ module.exports = {
         return list;
     },
     async addPS4(gameTitle, gameUrl) {
-        const game = PSGame.create({
-            title: gameTitle,
-            url: gameUrl
-        });
+        const game = await PSGame.findOne({ where: { url: gameUrl } });
+        if (game) {
+            return '';
+        } else {
+            PSGame.create({
+                title: gameTitle,
+                url: gameUrl
+            });
+            return gameTitle;
+        }
     },
     async deletePS4(url) {
         const game = await PSGame.findOne({ where: { url: url } });
-        const title = game.getDataValue('title');
-        await game.destroy();
-        return title;
+        if (game) {
+            const title = game.getDataValue('title');
+            await game.destroy();
+            return title;
+        } else {
+            return '';
+        }
+
     },
     async check(platform) {
         switch (platform) {

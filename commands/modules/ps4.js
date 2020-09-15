@@ -44,6 +44,14 @@ module.exports = {
 				return new Discord.MessageEmbed(topMenuEmbed).setDescription(name + ' successfully removed!');
 		}
 
+		function editGamesFailureEmbed(action) {
+			if (action === 'remove') {
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is not on the list!');
+			} else if (action === 'add') {
+				return new Discord.MessageEmbed(topMenuEmbed).setDescription('That game is already on the list!');
+			}
+		}
+
 		async function getGameJSON(url) {
 			const gameUrl = url;
 			const { included } = await fetch('https://store.playstation.com/valkyrie-api/en/US/999/resolve/' + gameUrl.substring(43)).then(response => response.json());
@@ -90,10 +98,15 @@ module.exports = {
 												// Need to check if url is already in the list
 												// UnhandlePromiseRejectionWarning: SequelizeUniqueConstraintError
 												getGameJSON(`${collected.first()}`).then(game => {
-													db.addPS4(game.name, `${collected.first()}`);
-													messages.push(message.channel.lastMessage);
-													deleteMessages();
-													message.channel.send(editGamesSuccessEmbed(game.name, 'add'));
+													db.addPS4(game.name, `${collected.first()}`).then(name => {
+														messages.push(message.channel.lastMessage);
+														deleteMessages();
+														if (name !== '') {
+															message.channel.send(editGamesSuccessEmbed(name, 'add'));
+														} else {
+															message.channel.send(editGamesFailureEmbed('add'));
+														}
+													});
 												}
 												);
 										}
@@ -122,7 +135,11 @@ module.exports = {
 												db.deletePS4(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													message.channel.send(editGamesSuccessEmbed(game, 'delete'));
+													if (game !== '') {
+														message.channel.send(editGamesSuccessEmbed(game, 'delete'));
+													} else {
+														message.channel.send(editGamesFailureEmbed('remove'));
+													}
 												});
 										}
 									})

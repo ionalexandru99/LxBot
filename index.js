@@ -25,6 +25,7 @@ client.once('ready', () => {
 
 		db.checkModule('epic').then(isActive => schedule.epic(isActive, channel));
 		db.checkModule('psplus').then(isActive => schedule.psplus(isActive, channel));
+		schedule.trackedGames(channel);
 	});
 });
 

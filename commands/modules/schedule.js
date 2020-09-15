@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const epic = require('./epic');
 const psplus = require('./psplus');
+const updater = require('./update');
 
 let epicSchedule;
 let psPlusSchedule;
@@ -34,7 +35,14 @@ module.exports = {
             }
             console.log('PlayStation Plus schedule off');
         } else {
-            // console.error();
+            console.error();
         }
+    },
+    async trackedGames(channel) {
+        gamesSchedule = schedule.scheduleJob('0 * * * *', function () {
+            updater.psUpdate(channel);
+            updater.eshopUpdate(channel);
+        });
+        console.log('Tracked Games schedule on');
     },
 };

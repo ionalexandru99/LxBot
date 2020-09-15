@@ -32,6 +32,17 @@ const PSGame = sequelize.define('psgames', {
         defaultValue: false,
     },
 });
+const SwitchGame = sequelize.define('switchgames', {
+    title: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
+    url: Sequelize.STRING,
+    onSale: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+    },
+});
 
 const PSPlus = sequelize.define('psplus', {
     url: {
@@ -137,7 +148,6 @@ module.exports = {
     },
     async setPsPlus(url) {
         const article = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
-        // console.log(article);
         if (article) {
             article.setDataValue('url', url);
             article.save().catch(console.error);
@@ -146,7 +156,6 @@ module.exports = {
                 url: url,
             }).catch(console.error);
         }
-        // console.log('test');
     },
     async listPS4() {
         const data = await PSGame.findAll();
@@ -177,25 +186,64 @@ module.exports = {
         } else {
             return '';
         }
-
     },
-    async check(platform) {
-        switch (platform) {
-            case 'ps4':
-                const games = await PSGame.findAll();
-                return (
-                    games.map(game => ({
-                        url: game.getDataValue('url'),
-                        onSale: game.getDataValue('onSale'),
-                    })
-                    )
-                );
-            default:
-                console.error;
+    async listSwitch() {
+        const data = await SwitchGame.findAll();
+        const list = [];
+        data.forEach(entry => {
+            list.push(entry.getDataValue('title'));
+        });
+        return list;
+    },
+    async addSwitch(gameTitle, gameUrl) {
+        const game = await SwitchGame.findOne({ where: { url: gameUrl } });
+        if (game) {
+            return '';
+        } else {
+            SwitchGame.create({
+                title: gameTitle,
+                url: gameUrl
+            });
+            return gameTitle;
         }
     },
-    async updateOnSale(url) {
-        const game = await PSGame.findOne({ where: { url: url } });
+    async deleteSwitch(url) {
+        const game = await SwitchGame.findOne({ where: { url: url } });
+        if (game) {
+            const title = game.getDataValue('title');
+            await game.destroy();
+            return title;
+        } else {
+            return '';
+        }
+    },
+    async check(platform) {
+        let games;
+        if (platform === 'ps4') {
+            games = await PSGame.findAll();
+        } else if (platform === 'switch') {
+            games = await SwitchGame.findAll();
+        }
+        else {
+            console.error;
+        }
+        return (games.map(game => ({
+            url: game.getDataValue('url'),
+            onSale: game.getDataValue('onSale'),
+        })
+        )
+        );
+    },
+    async updateOnSale(platform, url) {
+        let game;
+        if (platform === 'ps4') {
+            game = await PSGame.findOne({ where: { url: url } });
+        } else if (platform === 'switch') {
+            game = await SwitchGame.findOne({ where: { url: url } });
+        }
+        else {
+            console.error;
+        }
         game.setDataValue('onSale', !(game.getDataValue('onSale')));
         game.save().catch(console.error);
     }

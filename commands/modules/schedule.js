@@ -1,5 +1,4 @@
 const schedule = require('node-schedule');
-// const db = require('./dbInterface');
 const epic = require('./epic');
 const psplus = require('./psplus');
 

@@ -3,8 +3,6 @@ const Discord = require('discord.js');
 const db = require('./commands/modules/dbInterface');
 const schedule = require('./commands/modules/schedule');
 const { prefix, token } = require('./config.json');
-const epic = require('./commands/modules/epic');
-const psplus = require('./commands/modules/psplus');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();

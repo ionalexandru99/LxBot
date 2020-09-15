@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const db = require('./dbInterface');
+const { psIcon, psStoreURL } = require('../../config.json');
+
 
 module.exports = {
 
@@ -15,7 +17,7 @@ module.exports = {
 				+ '\n 1) View tracked games'
 				+ '\n 2) Add a game'
 				+ '\n 3) Remove a game')
-			.setAuthor('PlayStation 4 Deals', 'https://blog.playstation.com/tachyon/2019/03/pslogo.png');
+			.setAuthor('PlayStation 4 Deals', psIcon);
 
 		function viewGamesEmbed(list) {
 			if (list.length > 0) {
@@ -54,7 +56,7 @@ module.exports = {
 
 		async function getGameJSON(url) {
 			const gameUrl = url;
-			const { included } = await fetch('https://store.playstation.com/valkyrie-api/en/US/999/resolve/' + gameUrl.substring(43)).then(response => response.json());
+			const { included } = await fetch(psStoreURL + gameUrl.substring(43)).then(response => response.json());
 			return included[0].attributes;
 		}
 
@@ -95,8 +97,6 @@ module.exports = {
 												message.channel.send('Menu closed.');
 												break;
 											default:
-												// Need to check if url is already in the list
-												// UnhandlePromiseRejectionWarning: SequelizeUniqueConstraintError
 												getGameJSON(`${collected.first()}`).then(game => {
 													db.addPS4(game.name, `${collected.first()}`).then(name => {
 														messages.push(message.channel.lastMessage);
@@ -131,7 +131,6 @@ module.exports = {
 												message.channel.send('Menu closed.');
 												break;
 											default:
-												// Need to check if url exists in list
 												db.deletePS4(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();

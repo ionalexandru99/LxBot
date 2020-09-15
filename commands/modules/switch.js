@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
+const db = require('./dbInterface');
+const { switchIcon, eshopURL, eshopImageURL } = require('../../config.json');
+
 
 module.exports = {
 
@@ -22,10 +25,10 @@ module.exports = {
 
 		// Grab game image
 		const slug = storeUrl.substring(storeUrl.search('detail/') + 7);
-		const imageURL = 'https://www.nintendo.com/content/dam/noa/en_US/games/switch/s/' + slug + slug.substring(0, slug.length - 1) + '-hero.jpg';
+		const imageURL = eshopImageURL + slug + slug.substring(0, slug.length - 1) + '-hero.jpg';
 
 		// Grab prices and calculate discount
-		const { prices } = await fetch('https://api.ec.nintendo.com/v1/price?country=US&lang=en&ids=' + gameId).then(response => response.json());
+		const { prices } = await fetch(eshopURL + gameId).then(response => response.json());
 
 		const discountEndDate = new Date(prices[0].discount_price.end_datetime);
 		const regularPrice = Number.parseFloat(prices[0].regular_price.amount.substring(1));
@@ -36,7 +39,7 @@ module.exports = {
 			.setColor('#E60012')
 			.setTitle(gameTitle)
 			.setURL(storeUrl)
-			.setAuthor('Nintendo Switch Deals', 'https://b.thumbs.redditmedia.com/-jmGJ20JxItsO6OwSfcZ_gIAOh-INXRxnU2ZcNS899s.png')
+			.setAuthor('Nintendo Switch Deals', switchIcon)
 			.setImage(imageURL)
 			.addField('Regular Price', '~~$' + regularPrice + '~~', true)
 			.addField('Sale Price', '$' + discountPrice, true)

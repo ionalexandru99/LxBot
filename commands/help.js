@@ -44,6 +44,6 @@ module.exports = {
 		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
 		helpEmbed.setDescription(data);
-		message.channel.send(helpEmbed);
+		return message.channel.send(helpEmbed);
 	},
 };

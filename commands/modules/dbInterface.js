@@ -1,9 +1,7 @@
 const { Sequelize, where } = require('sequelize');
-const { dbName, dbUser, dbPass } = require('../../config.json');
+const { DATABASE_URL } = require('../../config.json');
 
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    dialect: 'postgres'
-});
+const sequelize = new Sequelize(DATABASE_URL);
 
 // Model definitions
 const Channel = sequelize.define('channel', {

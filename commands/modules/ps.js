@@ -5,7 +5,7 @@ const { psIcon, psStoreURL } = require('../../config.json');
 
 module.exports = {
 
-	async menu(message) {
+	menu(message) {
 
 		const messages = [];
 
@@ -87,9 +87,9 @@ module.exports = {
 			return response.content.includes('https://store.playstation.com') || response.content == 'exit';
 		};
 
-		message.channel.send(topMenuEmbed).then((msg) => {
+		return message.channel.send(topMenuEmbed).then(async (msg) => {
 			messages.push(msg);
-			message.channel.awaitMessages(mainFilter, { max: 1, time: 15000, errors: ['time'] })
+			await message.channel.awaitMessages(mainFilter, { max: 1, time: 15000, errors: ['time'] })
 				.then(collected => {
 					switch (`${collected.first()}`) {
 						// View list of tracked titles
@@ -97,7 +97,7 @@ module.exports = {
 							db.listPS().then(list => {
 								messages.push(message.channel.lastMessage);
 								deleteMessages();
-								message.channel.send(viewGamesEmbed(list));
+								return message.channel.send(viewGamesEmbed(list));
 							});
 							break;
 						// Add a title to be tracked
@@ -112,8 +112,7 @@ module.exports = {
 											case 'exit':
 												messages.push(message.channel.lastMessage);
 												deleteMessages();
-												message.channel.send('Menu closed.');
-												break;
+												return message.channel.send('Menu closed.');
 											default:
 												// Check if URL is valid
 												getGameJSON(`${collected.first()}`).then(game => {
@@ -122,22 +121,22 @@ module.exports = {
 														deleteMessages();
 														// Check if title is already on tracked list
 														if (name !== '') {
-															message.channel.send(editGamesSuccessEmbed(name, 'add'));
+															return message.channel.send(editGamesSuccessEmbed(name, 'add'));
 														} else {
-															message.channel.send(editGamesFailureEmbed('add'));
+															return message.channel.send(editGamesFailureEmbed('add'));
 														}
 													});
 												}
 												).catch(() => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													message.channel.send(errorURLEmbed())
+													return message.channel.send(errorURLEmbed())
 												});
 										}
 									})
 									.catch(collected => {
 										deleteMessages();
-										message.channel.send('Menu has been closed due to inactivity.');
+										return message.channel.send('Menu has been closed due to inactivity.');
 									})
 							});
 							break;
@@ -153,24 +152,23 @@ module.exports = {
 											case 'exit':
 												messages.push(message.channel.lastMessage);
 												deleteMessages();
-												message.channel.send('Menu closed.');
-												break;
+												return message.channel.send('Menu closed.');
 											default:
 												db.deletePS(`${collected.first()}`).then((game) => {
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
 													// Check if the title is on the tracked list
 													if (game !== '') {
-														message.channel.send(editGamesSuccessEmbed(game, 'delete'));
+														return message.channel.send(editGamesSuccessEmbed(game, 'delete'));
 													} else {
-														message.channel.send(editGamesFailureEmbed('remove'));
+														return message.channel.send(editGamesFailureEmbed('remove'));
 													}
 												});
 										}
 									})
 									.catch(collected => {
 										deleteMessages();
-										message.channel.send('Menu has been closed due to inactivity.');
+										return message.channel.send('Menu has been closed due to inactivity.');
 									})
 							});
 							break;
@@ -178,15 +176,14 @@ module.exports = {
 						case 'exit':
 							messages.push(message.channel.lastMessage);
 							deleteMessages();
-							message.channel.send('Menu closed.');
-							break;
+							return message.channel.send('Menu closed.');
 						default:
-							console.error;
+							return console.error;
 					}
 				})
 				.catch(collected => {
 					deleteMessages();
-					message.channel.send('Menu has been closed due to inactivity.');
+					return message.channel.send('Menu has been closed due to inactivity.');
 				});
 		});
 	},

@@ -31,8 +31,8 @@ module.exports = {
 					.setAuthor('PlayStation Plus', psPlusIcon)
 					.setDescription(article.contentSnippet);
 
-				channel.send(messageEmbed);
 				db.updatePsPlus(article.link);
+				channel.send(messageEmbed);
 			}
 		});
 	},

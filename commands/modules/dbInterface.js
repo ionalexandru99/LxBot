@@ -240,7 +240,7 @@ module.exports = {
         if (platform === 'ps') {
             games = await PSGame.findAll();
         } else if (platform === 'eshop') {
-            games = await SwitchGame.findAll();
+            games = await EShopGame.findAll();
         }
         else {
             console.error;

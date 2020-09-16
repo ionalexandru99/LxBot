@@ -5,7 +5,7 @@ const { switchIcon } = require('../../config.json');
 
 module.exports = {
 
-	async menu(message) {
+	menu(message) {
 
 		const messages = [];
 

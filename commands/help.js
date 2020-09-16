@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { prefix } = require('../config.json');
+const { configIcon, prefix } = require('../config.json');
 
 module.exports = {
 	name: 'help',
@@ -14,7 +14,7 @@ module.exports = {
 		// Embed skeleton
 		const helpEmbed = new Discord.MessageEmbed()
 			.setTitle('Commands')
-			.setAuthor('Tom Nook\'s Help Desk');
+			.setAuthor('Tom Nook\'s Help Desk', configIcon);
 
 		// Grab all commands for default message
 		if (!args.length) {

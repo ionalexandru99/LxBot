@@ -5,7 +5,7 @@ const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../
 
 module.exports = {
 
-    async psUpdate(channel) {
+    psUpdate(channel) {
         //Check PlayStation titles
         db.check('ps').then(gamesToCheck => {
 
@@ -53,7 +53,7 @@ module.exports = {
             });
         });
     },
-    async eshopUpdate(channel) {
+    eshopUpdate(channel) {
 
         // Check Nintendo eShop titles
         db.check('eshop').then(gamesToCheck => {

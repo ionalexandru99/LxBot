@@ -8,6 +8,8 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
+let active = false;
+
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
@@ -75,10 +77,23 @@ client.on('message', message => {
 
 	// Execute command
 	try {
-		db.getChannel().then(id => {
-			const channel = client.channels.cache.get(id);
-			command.execute(message, args, channel);
-		});
+		if (!active) {
+			// Run only when not waiting for a user response to another command
+
+			// Set cooldown for the command
+			timestamps.set(message.author.id, now);
+			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+			db.getChannel().then(id => {
+				active = true;
+				const channel = client.channels.cache.get(id);
+				command.execute(message, args, channel)
+					.then(result => {
+						active = false;
+					})
+					.catch(console.error);
+			});
+		}
 	}
 	catch (error) {
 		console.error(error);

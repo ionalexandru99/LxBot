@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const db = require('./dbInterface');
-const { switchIcon } = require('../../config.json');
+const { switchIcon } = require(process.env);
 
 module.exports = {
 

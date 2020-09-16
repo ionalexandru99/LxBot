@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const db = require('./dbInterface');
 const fetch = require('node-fetch');
-const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../../config.json');
+const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require(process.env);
 
 module.exports = {
 

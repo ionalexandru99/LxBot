@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { configIcon, prefix } = require('../config.json');
+const { configIcon, prefix } = require(process.env);
 
 module.exports = {
 	name: 'help',

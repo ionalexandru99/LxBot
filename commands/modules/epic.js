@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
-const { epicFreeURL, epicGameURL, epicIcon, epicStoreURL } = require('../../config.json');
+const { epicFreeURL, epicGameURL, epicIcon, epicStoreURL } = require(process.env);
 
 module.exports = {
 

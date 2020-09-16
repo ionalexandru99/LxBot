@@ -4,7 +4,7 @@ const ps = require('./modules/ps');
 const nintendo = require('./modules/eshop');
 const db = require('./modules/dbInterface');
 const update = require('./modules/update');
-const { prefix, configIcon } = require('../config.json');
+const { prefix, configIcon } = require(process.env);
 
 module.exports = {
 	name: 'deals',

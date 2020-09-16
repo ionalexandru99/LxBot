@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Parser = require('rss-parser');
 const db = require('./dbInterface');
-const { psPlusURL, psPlusIcon, } = require('../../config.json');
+const { psPlusURL, psPlusIcon, } = require(process.env);
 
 const parser = new Parser();
 

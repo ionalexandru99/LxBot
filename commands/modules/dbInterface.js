@@ -11,6 +11,7 @@ const Channel = sequelize.define('channel', {
         unique: true,
     },
     name: Sequelize.STRING,
+}, {
     freezeTableName: true,
 });
 const Module = sequelize.define('module', {
@@ -19,6 +20,7 @@ const Module = sequelize.define('module', {
         unique: true,
     },
     enabled: Sequelize.BOOLEAN,
+}, {
     freezeTableName: true,
 });
 const PSGame = sequelize.define('psgames', {
@@ -31,6 +33,7 @@ const PSGame = sequelize.define('psgames', {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
     },
+}, {
     freezeTableName: true,
 });
 const EShopGame = sequelize.define('eshopgames', {
@@ -43,6 +46,7 @@ const EShopGame = sequelize.define('eshopgames', {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
     },
+}, {
     freezeTableName: true,
 });
 const PSPlus = sequelize.define('psplus', {
@@ -50,6 +54,7 @@ const PSPlus = sequelize.define('psplus', {
         type: Sequelize.STRING,
         unique: true,
     },
+}, {
     freezeTableName: true,
 });
 

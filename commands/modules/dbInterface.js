@@ -1,7 +1,6 @@
 const { Sequelize, where } = require('sequelize');
-const DATABASE_URL = process.env.DATABASE_URL;
 
-const sequelize = new Sequelize(DATABASE_URL);
+const sequelize = new Sequelize(process.envDATABASE_URL);
 
 // Model definitions
 const Channel = sequelize.define('channel', {

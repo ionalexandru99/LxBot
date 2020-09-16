@@ -4,11 +4,10 @@ const ps = require('./modules/ps');
 const nintendo = require('./modules/eshop');
 const db = require('./modules/dbInterface');
 const update = require('./modules/update');
-const { prefix, configIcon } = require(process.env);
 
 module.exports = {
 	name: 'deals',
-	description: 'Deals for Games. Use the command `' + `${prefix}deals` + '` with any of the following arguments for different actions:'
+	description: 'Deals for Games. Use the command `' + `${process.env.prefix}deals` + '` with any of the following arguments for different actions:'
 		+ '\n\n:gear: **Channel Management** :gear:'
 		+ '\n`activate`: Enable the current channel to use all deals commands in that channel (*Only one channel may be active at a time*)'
 		+ '\n`deactivate`: Disable the current channel to use any deals commands in that channel'
@@ -27,14 +26,14 @@ module.exports = {
 	execute(message, args, channel) {
 
 		// Embed skeleton
-		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', configIcon);
+		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', process.env.configIcon);
 
 		// Embed for module management
 		function moduleEmbed(module, active) {
 			return (
 				new Discord.MessageEmbed()
 					.setTitle('Module Management')
-					.setAuthor('Tom Nook Configuration', configIcon)
+					.setAuthor('Tom Nook Configuration', process.env.configIcon)
 					.setDescription(module.toUpperCase() + ' module is ' + (active ? 'activated' : 'deactivated') + '!')
 			);
 		}

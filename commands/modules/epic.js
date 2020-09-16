@@ -1,13 +1,12 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
-const { epicFreeURL, epicGameURL, epicIcon, epicStoreURL } = require(process.env);
 
 module.exports = {
 
 	async check(channel) {
 
 		// Grab list of free weekly games from Epic
-		const { data } = await fetch(epicFreeURL).then(response => response.json());
+		const { data } = await fetch(process.env.epicFreeURL).then(response => response.json());
 
 		// Remove games not yet available for free
 		const currentDate = new Date();
@@ -19,7 +18,7 @@ module.exports = {
 		freeEpicGames.map(async game => {
 
 			// Grab game information
-			const gameURL = epicStoreURL + game.productSlug.substring(0, game.productSlug.length - 5);
+			const gameURL = process.env.epicStoreURL + game.productSlug.substring(0, game.productSlug.length - 5);
 			const { pages } = await fetch(gameURL).then(response => response.json());
 			const gamePage = pages.find(content => {
 				return content.productName === game.title;
@@ -41,10 +40,10 @@ module.exports = {
 			// Create embed
 			const messageEmbed = new Discord.MessageEmbed()
 				.setTitle(game.title)
-				.setURL(epicGameURL + game.productSlug)
+				.setURL(process.env.epicGameURL + game.productSlug)
 				.setColor('#FDFDFD')
 				.setThumbnail()
-				.setAuthor('Epic Games Store', epicIcon)
+				.setAuthor('Epic Games Store', process.env.epicIcon)
 				.setDescription(gamePage.data.about.shortDescription)
 				.setImage(game.keyImages[0].url)
 				.addField('Developer', gamePage.data.meta.developer, true)

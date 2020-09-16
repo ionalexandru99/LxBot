@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const db = require('./dbInterface');
 const fetch = require('node-fetch');
-const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require(process.env);
 
 module.exports = {
 
@@ -12,7 +11,7 @@ module.exports = {
             gamesToCheck.forEach(async function (game) {
 
                 //Grab price info
-                const { included } = await fetch(psStoreURL + game.url.substring(43)).then(response => response.json());
+                const { included } = await fetch(process.env.psStoreURL + game.url.substring(43)).then(response => response.json());
                 const contentInfo = included[0].attributes;
                 const contentPrice = contentInfo.skus[0].prices;
 
@@ -34,7 +33,7 @@ module.exports = {
                             .setColor('#0099ff')
                             .setTitle(contentInfo.name)
                             .setURL(game.url)
-                            .setAuthor('PlayStation Deals', psIcon)
+                            .setAuthor('PlayStation Deals', process.env.psIcon)
                             .setImage(contentInfo['thumbnail-url-base'])
                             .addField('Regular Price', '~~' + discount['strikethrough-price']['display'] + '~~', true)
                             .addField('Sale Price', discount['actual-price']['display'], true)
@@ -77,10 +76,10 @@ module.exports = {
 
                 // Grab game image
                 const slug = game.url.substring(game.url.search('detail/') + 7);
-                const imageURL = eshopImageURL + slug + slug.substring(0, slug.length - 1) + '-hero.jpg';
+                const imageURL = process.env.eshopImageURL + slug + slug.substring(0, slug.length - 1) + '-hero.jpg';
 
                 // Grab prices and calculate discount
-                const { prices } = await fetch(eshopURL + gameId).then(response => response.json());
+                const { prices } = await fetch(process.env.eshopURL + gameId).then(response => response.json());
 
                 const regularPrice = Number.parseFloat(prices[0].regular_price.amount.substring(1));
 
@@ -103,7 +102,7 @@ module.exports = {
                             .setColor('#E60012')
                             .setTitle(gameTitle)
                             .setURL(game.url)
-                            .setAuthor('Nintendo eShop Deals', switchIcon)
+                            .setAuthor('Nintendo eShop Deals', process.env.switchIcon)
                             .setImage(imageURL)
                             .addField('Regular Price', '~~$' + regularPrice + '~~', true)
                             .addField('Sale Price', '$' + discountPrice, true)

@@ -1,6 +1,8 @@
 const { Sequelize, where } = require('sequelize');
 
-const sequelize = new Sequelize(process.envDATABASE_URL);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres'
+});
 
 // Model definitions
 const Channel = sequelize.define('channel', {

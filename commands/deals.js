@@ -45,12 +45,12 @@ module.exports = {
 				configEmbed.setTitle('Channel Management');
 				if (savedChannel === 'none') {
 					configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
-					message.channel.send(configEmbed);
+					return message.channel.send(configEmbed);
 				} else {
 					console.log(savedChannel);
 					configEmbed.setDescription('**#' + savedChannel + '** is currently the active channel!'
 						+ '\nUse the `deactivate` argument first when changing active channels.');
-					message.channel.send(configEmbed);
+					return message.channel.send(configEmbed);
 				}
 			});
 		}
@@ -59,13 +59,12 @@ module.exports = {
 			db.deleteChannel().then(
 				channel => {
 					configEmbed.setTitle('Channel Deactivation')
-
 					if (channel) {
 						configEmbed.setDescription('**#' + channel + '** is closed!');
-						message.channel.send(configEmbed);
+						return message.channel.send(configEmbed);
 					} else {
 						configEmbed.setDescription('There is currently no active channel!');
-						message.channel.send(configEmbed);
+						return message.channel.send(configEmbed);
 					}
 				})
 				.catch(console.error);

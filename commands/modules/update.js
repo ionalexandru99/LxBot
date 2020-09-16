@@ -5,9 +5,9 @@ const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../
 
 module.exports = {
 
-    psUpdate(channel) {
+    async psUpdate(channel) {
         //Check PlayStation titles
-        db.check('ps').then(gamesToCheck => {
+        return db.check('ps').then(gamesToCheck => {
 
             gamesToCheck.forEach(async function (game) {
 
@@ -41,22 +41,23 @@ module.exports = {
                             .addField('Discount', discount['discount-percentage'] + '%', true)
                             .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
                         channel.send(messageEmbed);
-                        db.updateOnSale('ps', game.url);
-                    }
+                        return db.updateOnSale('ps', game.url);
+                    } else return;
 
                 } else {
                     // No discount available
                     if (game.onSale === true) {
-                        db.updateOnSale('ps', game.url);
+                        return db.updateOnSale('ps', game.url);
                     }
+                    else return;
                 }
             });
         });
     },
-    eshopUpdate(channel) {
+    async eshopUpdate(channel) {
 
         // Check Nintendo eShop titles
-        db.check('eshop').then(gamesToCheck => {
+        return db.check('eshop').then(gamesToCheck => {
 
             gamesToCheck.forEach(async function (game) {
 
@@ -109,14 +110,14 @@ module.exports = {
                             .addField('Discount', discount.toPrecision(2) + '%', true)
                             .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
                         channel.send(messageEmbed);
-                        db.updateOnSale('eshop', game.url);
-                    }
+                        return db.updateOnSale('eshop', game.url);
+                    } else return;
 
                 } else {
                     // No discount available
                     if (game.onSale === true) {
-                        db.updateOnSale('eshop', game.url);
-                    }
+                        return db.updateOnSale('eshop', game.url);
+                    } else return;
                 }
             });
         });

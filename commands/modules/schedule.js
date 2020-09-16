@@ -51,12 +51,10 @@ module.exports = {
         gamesSchedule = schedule.scheduleJob('0 * * * *', () => {
             // Check every hour
             console.log('Checking for sale updates for tracked PS titles...');
-            updater.psUpdate(channel);
-            console.log('PS update complete!');
+            updater.psUpdate(channel).then(() => console.log('PS update complete!'));
 
             console.log('Checking for sale updates for tracked eShop titles...');
-            updater.eshopUpdate(channel);
-            console.log('eShop update complete!');
+            updater.eshopUpdate(channel).then(() => console.log('eShop update complete!'));
         });
         console.log('Tracked Games schedule on');
     },

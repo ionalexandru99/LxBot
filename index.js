@@ -2,7 +2,6 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const db = require('./commands/modules/dbInterface');
 const schedule = require('./commands/modules/schedule');
-const { prefix, token } = require(process.env);
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -36,10 +35,10 @@ client.once('ready', () => {
 client.on('message', message => {
 
 	// Check for prefix
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (!message.content.startsWith(process.env.prefix) || message.author.bot) return;
 
 	// Grab command from message
-	const args = message.content.slice(prefix.length).split(/ +/);
+	const args = message.content.slice(process.env.prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
 	// Check if command exists
@@ -102,4 +101,4 @@ client.on('message', message => {
 
 });
 
-client.login(token);
+client.login(process.env.token);

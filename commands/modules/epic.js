@@ -49,7 +49,7 @@ module.exports = {
 				.addField('Developer', gamePage.data.meta.developer, true)
 				.addField('Publisher', gamePage.data.meta.publisher, true)
 				.addField('Tags', tags.join(', '), true)
-				.setFooter('Free until ' + endDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+				.setFooter('Free until ' + endDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
 
 			channel.send(messageEmbed);
 		});

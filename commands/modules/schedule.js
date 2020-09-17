@@ -12,7 +12,7 @@ module.exports = {
     epic(active, channel) {
         if (active) {
             // Turn on schedule if enabled
-            epicSchedule = schedule.scheduleJob('0 12 * * 4', function () {
+            epicSchedule = schedule.scheduleJob('0 16 * * 4', function () {
                 // Checks Thursdays at 12:00
                 epic.check(channel);
             });

@@ -38,7 +38,7 @@ module.exports = {
                             .addField('Regular Price', '~~' + discount['strikethrough-price']['display'] + '~~', true)
                             .addField('Sale Price', discount['actual-price']['display'], true)
                             .addField('Discount', discount['discount-percentage'] + '%', true)
-                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                         channel.send(messageEmbed);
                         return db.updateOnSale('ps', game.url);
                     } else return;
@@ -107,7 +107,7 @@ module.exports = {
                             .addField('Regular Price', '~~$' + regularPrice + '~~', true)
                             .addField('Sale Price', '$' + discountPrice, true)
                             .addField('Discount', discount.toPrecision(2) + '%', true)
-                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                         channel.send(messageEmbed);
                         return db.updateOnSale('eshop', game.url);
                     } else return;

@@ -21,7 +21,7 @@ module.exports = {
 			const gameURL = process.env.epicStoreURL + game.productSlug.substring(0, game.productSlug.length - 5);
 			const { pages } = await fetch(gameURL).then(response => response.json());
 			const gamePage = pages.find(content => {
-				return content.productName === game.title;
+				return content._title === 'home';
 			});
 
 			// Convert category tags to title case

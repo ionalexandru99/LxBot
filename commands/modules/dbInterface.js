@@ -1,6 +1,7 @@
 const { Sequelize, where } = require('sequelize');
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    port: process.env.PORT,
     dialect: 'postgres'
 });
 

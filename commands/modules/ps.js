@@ -126,10 +126,11 @@ module.exports = {
 														}
 													});
 												}
-												).catch(() => {
+												).catch(error => {
+													console.log(error);
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													return message.channel.send(errorURLEmbed())
+													return message.channel.send(errorURLEmbed());
 												});
 										}
 									})

@@ -68,7 +68,7 @@ module.exports = {
 		// Grab game info
 		async function getGameJSON(url) {
 			const gameUrl = url;
-			const { included } = await fetch(process.env.psStoreURL + gameUrl.substring(43)).then(response => response.json());
+			const { included } = await fetch(process.env.psStoreURL + gameUrl.substring(44)).then(response => response.json());
 			return included[0].attributes;
 		}
 

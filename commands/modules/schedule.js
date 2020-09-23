@@ -48,7 +48,7 @@ module.exports = {
     },
     // Scheduling for tracked titles
     trackedTitles(channel) {
-        gamesSchedule = schedule.scheduleJob('0/10 * * * *', () => {
+        gamesSchedule = schedule.scheduleJob('0 * * * *', () => {
             // Check every hour
             console.log('Checking for sale updates for tracked PS titles...');
             updater.psUpdate(channel).then(() => console.log('PS update complete!'));

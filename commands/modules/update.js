@@ -12,7 +12,10 @@ module.exports = {
 
                 //Grab price info
                 const { included } = await fetch(process.env.psStoreURL + game.url.substring(44))
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log(response);
+                        return response.json();
+                    })
                     .catch(console.error);
                 const contentInfo = included[0].attributes;
                 const contentPrice = contentInfo.skus[0].prices;

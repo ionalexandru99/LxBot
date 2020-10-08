@@ -30,7 +30,7 @@ module.exports = {
 					.setAuthor('PlayStation Plus', process.env.psPlusIcon)
 					.setDescription(article.contentSnippet);
 
-				db.updatePsPlus(article.link);
+				db.addPsPlus(article.link);
 				channel.send(messageEmbed);
 			}
 		});

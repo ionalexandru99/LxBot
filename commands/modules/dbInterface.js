@@ -156,7 +156,7 @@ module.exports = {
 
     // Get saved PS Plus article
     async getPsPlus() {
-        const savedArticle = await PSPlus.findOne().catch(console.error);
+        const savedArticle = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
         if (savedArticle) {
             return savedArticle.getDataValue('url');
         } else {
@@ -164,16 +164,10 @@ module.exports = {
         }
     },
     // Update saved PS Plus article
-    async updatePsPlus(url) {
-        const article = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
-        if (article) {
-            article.setDataValue('url', url);
-            article.save().catch(console.error);
-        } else {
-            PSPlus.create({
-                url: url,
-            }).catch(console.error);
-        }
+    async addPsPlus(url) {
+        PSPlus.create({
+            url: url,
+        }).catch(console.error);
     },
 
     // List all tracked PlayStation title

@@ -12,7 +12,7 @@ module.exports = {
     epic(active, channel) {
         if (active) {
             // Turn on schedule if enabled
-            epicSchedule = schedule.scheduleJob('0 16 * * 4', function () {
+            epicSchedule = schedule.scheduleJob('0 17 * * 4', function () {
                 // Checks Thursdays at 12:00
                 epic.check(channel);
             });
@@ -48,7 +48,7 @@ module.exports = {
     },
     // Scheduling for tracked titles
     trackedTitles(channel) {
-        gamesSchedule = schedule.scheduleJob('0 * * * *', () => {
+        gamesSchedule = schedule.scheduleJob('0 17 * * *', () => {
             // Check every hour
             console.log('Checking for sale updates for tracked PS titles...');
             updater.psUpdate(channel).then(() => console.log('PS update complete!'));

@@ -41,7 +41,7 @@ module.exports = {
 		// Embed for channel activation
 		function activateChannel(message) {
 			db.addChannel(message.channel).then(
-				async (savedChannel) => {
+				savedChannel => {
 					configEmbed.setTitle('Channel Management');
 					if (savedChannel === 'none') {
 						configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
@@ -58,7 +58,7 @@ module.exports = {
 		//Embed for channel deactivation
 		function deactivateChannel(message) {
 			db.deleteChannel().then(
-				async (channel) => {
+				channel => {
 					configEmbed.setTitle('Channel Deactivation')
 					if (channel) {
 						configEmbed.setDescription('**#' + channel + '** is closed!');

@@ -107,27 +107,37 @@ module.exports = {
     },
     // Add channel ID
     async addChannel(channel) {
-        const savedChannel = await Channel.findOne();
-        if (!savedChannel) {
-            Channel.create({
-                channelID: channel.id,
-                name: channel.name,
-            });
-            return 'none';
-        } else {
-            return savedChannel.getDataValue('name');;
+        try {
+            const savedChannel = await Channel.findOne();
+            if (!savedChannel) {
+                Channel.create({
+                    channelID: channel.id,
+                    name: channel.name,
+                });
+                return 'none';
+            } else {
+                return savedChannel.getDataValue('name');;
+            }
+        } catch (error) {
+            console.error();
         }
+
     },
     // Delete channel ID
     async deleteChannel() {
-        const savedChannel = await Channel.findOne();
-        if (savedChannel) {
-            const name = savedChannel.getDataValue('name');
-            await savedChannel.destroy();
-            return name;
-        } else {
-            return savedChannel;
+        try {
+            const savedChannel = await Channel.findOne();
+            if (savedChannel) {
+                const name = savedChannel.getDataValue('name');
+                await savedChannel.destroy();
+                return name;
+            } else {
+                return savedChannel;
+            }
+        } catch (error) {
+            console.error();
         }
+
     },
 
     // Check status of a module

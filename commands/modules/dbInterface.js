@@ -119,7 +119,7 @@ module.exports = {
                 return savedChannel.getDataValue('name');;
             }
         } catch (error) {
-            console.error();
+            console.log(error);
         }
 
     },
@@ -135,7 +135,7 @@ module.exports = {
                 return savedChannel;
             }
         } catch (error) {
-            console.error();
+            console.log(error);
         }
 
     },

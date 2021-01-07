@@ -165,7 +165,7 @@ module.exports = {
     },
 
     // Get saved PS Plus article
-    async getPsPlus() {
+    async getPsPlus(url) {
         const savedArticle = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
         if (savedArticle) {
             return savedArticle.getDataValue('url');

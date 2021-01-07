@@ -12,7 +12,7 @@ module.exports = {
 		const article = (await parser.parseURL(process.env.psPlusURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 
-		db.getPsPlus().then(articleSaved => {
+		return db.getPsPlus().then(articleSaved => {
 			if (articleSaved !== article.link) {
 
 				// Grab article image

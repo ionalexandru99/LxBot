@@ -33,6 +33,7 @@ module.exports = {
 				db.addPsPlus(article.link);
 				return channel.send(messageEmbed);
 			}
-		});
+		})
+			.catch(console.error);
 	},
 };

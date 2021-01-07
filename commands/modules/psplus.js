@@ -12,7 +12,7 @@ module.exports = {
 		const article = (await parser.parseURL(process.env.psPlusURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 
-		return db.getPsPlus().then(articleSaved => {
+		db.getPsPlus().then(articleSaved => {
 			if (articleSaved !== article.link) {
 
 				// Grab article image
@@ -31,7 +31,7 @@ module.exports = {
 					.setDescription(article.contentSnippet);
 
 				db.addPsPlus(article.link);
-				channel.send(messageEmbed);
+				return channel.send(messageEmbed);
 			}
 		});
 	},

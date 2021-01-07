@@ -40,19 +40,20 @@ module.exports = {
 
 		// Embed for channel activation
 		function activateChannel(message) {
-			db.addChannel(message.channel).then(async (savedChannel) => {
-
-				configEmbed.setTitle('Channel Management');
-				if (savedChannel === 'none') {
-					configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
-					return message.channel.send(configEmbed);
-				} else {
-					console.log(savedChannel);
-					configEmbed.setDescription('**#' + savedChannel + '** is currently the active channel!'
-						+ '\nUse the `deactivate` argument first when changing active channels.');
-					return message.channel.send(configEmbed);
-				}
-			});
+			db.addChannel(message.channel).then(
+				async (savedChannel) => {
+					configEmbed.setTitle('Channel Management');
+					if (savedChannel === 'none') {
+						configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
+						return message.channel.send(configEmbed);
+					} else {
+						console.log(savedChannel);
+						configEmbed.setDescription('**#' + savedChannel + '** is currently the active channel!'
+							+ '\nUse the `deactivate` argument first when changing active channels.');
+						return message.channel.send(configEmbed);
+					}
+				})
+				.catch(console.error);
 		}
 		//Embed for channel deactivation
 		function deactivateChannel(message) {

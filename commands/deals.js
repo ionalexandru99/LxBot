@@ -4,11 +4,10 @@ const ps = require('./modules/ps');
 const nintendo = require('./modules/eshop');
 const db = require('./modules/dbInterface');
 const update = require('./modules/update');
-const { prefix, configIcon } = require('../config.json');
 
 module.exports = {
 	name: 'deals',
-	description: 'Deals for Games. Use the command `' + `${prefix}deals` + '` with any of the following arguments for different actions:'
+	description: 'Deals for Games. Use the command `' + `${process.env.prefix}deals` + '` with any of the following arguments for different actions:'
 		+ '\n\n:gear: **Channel Management** :gear:'
 		+ '\n`activate`: Enable the current channel to use all deals commands in that channel (*Only one channel may be active at a time*)'
 		+ '\n`deactivate`: Disable the current channel to use any deals commands in that channel'
@@ -27,45 +26,48 @@ module.exports = {
 	execute(message, args, channel) {
 
 		// Embed skeleton
-		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', configIcon);
+		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', process.env.configIcon);
 
 		// Embed for module management
 		function moduleEmbed(module, active) {
 			return (
 				new Discord.MessageEmbed()
 					.setTitle('Module Management')
-					.setAuthor('Tom Nook Configuration', configIcon)
+					.setAuthor('Tom Nook Configuration', process.env.configIcon)
 					.setDescription(module.toUpperCase() + ' module is ' + (active ? 'activated' : 'deactivated') + '!')
 			);
 		}
 
 		// Embed for channel activation
 		function activateChannel(message) {
-			db.addChannel(message.channel).then(savedChannel => {
-				configEmbed.setTitle('Channel Management');
-				if (savedChannel === 'none') {
-					configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
-					message.channel.send(configEmbed);
-				} else {
-					console.log(savedChannel);
-					configEmbed.setDescription('**#' + savedChannel + '** is currently the active channel!'
-						+ '\nUse the `deactivate` argument first when changing active channels.');
-					message.channel.send(configEmbed);
-				}
-			});
+			db.addChannel(message.channel).then(
+				savedChannel => {
+					configEmbed.setTitle('Channel Management');
+					if (savedChannel === 'none') {
+						configEmbed.setDescription('**#' + message.channel.name + '** is open for business!');
+						return message.channel.send(configEmbed);
+					} else {
+						console.log(savedChannel);
+						configEmbed.setDescription('**#' + savedChannel + '** is currently the active channel!'
+							+ '\nUse the `deactivate` argument first when changing active channels.');
+						return message.channel.send(configEmbed);
+					}
+				})
+				.catch(console.error);
 		}
 		//Embed for channel deactivation
 		function deactivateChannel(message) {
-			db.deleteChannel().then(channel => {
-				configEmbed.setTitle('Channel Deactivation')
-				if (channel) {
-					configEmbed.setDescription('**#' + channel + '** is closed!');
-					message.channel.send(configEmbed);
-				} else {
-					configEmbed.setDescription('There is currently no active channel!');
-					message.channel.send(configEmbed);
-				}
-			})
+			db.deleteChannel().then(
+				channel => {
+					configEmbed.setTitle('Channel Deactivation')
+					if (channel) {
+						configEmbed.setDescription('**#' + channel + '** is closed!');
+						return message.channel.send(configEmbed);
+					} else {
+						configEmbed.setDescription('There is currently no active channel!');
+						return message.channel.send(configEmbed);
+					}
+				})
 				.catch(console.error);
 		}
 

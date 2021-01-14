@@ -13,7 +13,7 @@ module.exports = {
 		const article = (await parser.parseURL(psPlusURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 
-		db.getPsPlus().then(articleSaved => {
+		db.getPsPlus(article.link).then(articleSaved => {
 			if (articleSaved !== article.link) {
 
 				// Grab article image
@@ -31,9 +31,10 @@ module.exports = {
 					.setAuthor('PlayStation Plus', psPlusIcon)
 					.setDescription(article.contentSnippet);
 
-				db.updatePsPlus(article.link);
-				channel.send(messageEmbed);
+				db.addPsPlus(article.link);
+				return channel.send(messageEmbed);
 			}
-		});
+		})
+			.catch(console.error);
 	},
 };

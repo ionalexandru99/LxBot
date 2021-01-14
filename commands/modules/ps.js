@@ -69,7 +69,7 @@ module.exports = {
 		// Grab game info
 		async function getGameJSON(url) {
 			const gameUrl = url;
-			const { included } = await fetch(psStoreURL + gameUrl.substring(43)).then(response => response.json());
+			const { included } = await fetch(psStoreURL + gameUrl.substring(44)).then(response => response.json());
 			return included[0].attributes;
 		}
 
@@ -127,10 +127,11 @@ module.exports = {
 														}
 													});
 												}
-												).catch(() => {
+												).catch(error => {
+													console.log(error);
 													messages.push(message.channel.lastMessage);
 													deleteMessages();
-													return message.channel.send(errorURLEmbed())
+													return message.channel.send(errorURLEmbed());
 												});
 										}
 									})

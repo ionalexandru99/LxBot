@@ -12,6 +12,8 @@ const Channel = sequelize.define('channel', {
         unique: true,
     },
     name: Sequelize.STRING,
+}, {
+    freezeTableName: true,
 });
 const Module = sequelize.define('module', {
     name: {
@@ -19,6 +21,8 @@ const Module = sequelize.define('module', {
         unique: true,
     },
     enabled: Sequelize.BOOLEAN,
+}, {
+    freezeTableName: true,
 });
 const PSGame = sequelize.define('psgames', {
     title: {
@@ -30,6 +34,8 @@ const PSGame = sequelize.define('psgames', {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
     },
+}, {
+    freezeTableName: true,
 });
 const EShopGame = sequelize.define('eshopgames', {
     title: {
@@ -41,12 +47,16 @@ const EShopGame = sequelize.define('eshopgames', {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
     },
+}, {
+    freezeTableName: true,
 });
 const PSPlus = sequelize.define('psplus', {
     url: {
         type: Sequelize.STRING,
         unique: true,
     },
+}, {
+    freezeTableName: true,
 });
 
 module.exports = {
@@ -97,26 +107,34 @@ module.exports = {
     },
     // Add channel ID
     async addChannel(channel) {
-        const savedChannel = await Channel.findOne();
-        if (!savedChannel) {
-            Channel.create({
-                channelID: channel.id,
-                name: channel.name,
-            });
-            return 'none';
-        } else {
-            return savedChannel.getDataValue('name');;
+        try {
+            const savedChannel = await Channel.findOne();
+            if (!savedChannel) {
+                Channel.create({
+                    channelID: channel.id,
+                    name: channel.name,
+                });
+                return 'none';
+            } else {
+                return savedChannel.getDataValue('name');;
+            }
+        } catch (error) {
+            console.log(error);
         }
     },
     // Delete channel ID
     async deleteChannel() {
-        const savedChannel = await Channel.findOne();
-        if (savedChannel) {
-            const name = savedChannel.getDataValue('name');
-            await savedChannel.destroy();
-            return name;
-        } else {
-            return savedChannel;
+        try {
+            const savedChannel = await Channel.findOne();
+            if (savedChannel) {
+                const name = savedChannel.getDataValue('name');
+                await savedChannel.destroy();
+                return name;
+            } else {
+                return savedChannel;
+            }
+        } catch (error) {
+            console.log(error);
         }
     },
 
@@ -145,25 +163,18 @@ module.exports = {
     },
 
     // Get saved PS Plus article
-    async getPsPlus() {
-        const savedArticle = await PSPlus.findOne().catch(console.error);
+    async getPsPlus(url) {
+        const savedArticle = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
         if (savedArticle) {
             return savedArticle.getDataValue('url');
         } else {
             return '';
         }
     },
-    // Update saved PS Plus article
-    async updatePsPlus(url) {
-        const article = await PSPlus.findOne({ where: { url: url } }).catch(console.error);
-        if (article) {
-            article.setDataValue('url', url);
-            article.save().catch(console.error);
-        } else {
-            PSPlus.create({
-                url: url,
-            }).catch(console.error);
-        }
+    async addPsPlus(url) {
+        PSPlus.create({
+            url: url,
+        }).catch(console.error);
     },
 
     // List all tracked PlayStation title

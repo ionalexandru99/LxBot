@@ -12,7 +12,9 @@ module.exports = {
             gamesToCheck.forEach(async function (game) {
 
                 //Grab price info
-                const { included } = await fetch(psStoreURL + game.url.substring(43)).then(response => response.json());
+                const { included } = await fetch(process.env.psStoreURL + game.url.substring(44))
+                    .then(response => response.json())
+                    .catch(console.error);
                 const contentInfo = included[0].attributes;
                 const contentPrice = contentInfo.skus[0].prices;
 
@@ -39,7 +41,7 @@ module.exports = {
                             .addField('Regular Price', '~~' + discount['strikethrough-price']['display'] + '~~', true)
                             .addField('Sale Price', discount['actual-price']['display'], true)
                             .addField('Discount', discount['discount-percentage'] + '%', true)
-                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                         channel.send(messageEmbed);
                         return db.updateOnSale('ps', game.url);
                     } else return;
@@ -108,7 +110,7 @@ module.exports = {
                             .addField('Regular Price', '~~$' + regularPrice + '~~', true)
                             .addField('Sale Price', '$' + discountPrice, true)
                             .addField('Discount', discount.toPrecision(2) + '%', true)
-                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+                            .setFooter('Sale ends ' + discountEndDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                         channel.send(messageEmbed);
                         return db.updateOnSale('eshop', game.url);
                     } else return;

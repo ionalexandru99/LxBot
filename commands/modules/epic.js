@@ -12,8 +12,7 @@ module.exports = {
 		// Remove games not yet available for free
 		const currentDate = new Date();
 		const freeEpicGames = data.Catalog.searchStore.elements.filter(game => {
-			const gameDate = new Date(game.effectiveDate);
-			return currentDate.valueOf() > gameDate.valueOf();
+			return game.promotions.promotionalOffers.length > 0;
 		});
 
 		freeEpicGames.map(async game => {
@@ -40,8 +39,7 @@ module.exports = {
 			});
 
 			// Determine the end date for the promotion
-			const endDate = new Date(game.effectiveDate);
-			endDate.setDate(endDate.getDate() + 7);
+			const endDate = new Date(game.promotions.promotionalOffers[0].promotionalOffers[0].endDate);
 
 			// Create embed
 			const messageEmbed = new Discord.MessageEmbed()
@@ -55,7 +53,7 @@ module.exports = {
 				.addField('Developer', gamePage.data.meta.developer, true)
 				.addField('Publisher', gamePage.data.meta.publisher, true)
 				.addField('Tags', tags.join(', '), true)
-				.setFooter('Free until ' + endDate.toLocaleString('en-US', { timezone: 'America/New_York' }));
+				.setFooter('Free until ' + endDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
 
 			channel.send(messageEmbed);
 		});

@@ -20,14 +20,14 @@ const cooldowns = new Discord.Collection();
 client.once('ready', () => {
 	console.log('Ready!');
 	db.testDB();
-	db.setUpDB();
+	db.setUpDB().then(() => {
+		db.getChannel().then(id => {
+			const channel = client.channels.cache.get(id);
 
-	db.getChannel().then(id => {
-		const channel = client.channels.cache.get(id);
-
-		db.checkModule('epic').then(isActive => schedule.epic(isActive, channel));
-		db.checkModule('psplus').then(isActive => schedule.psplus(isActive, channel));
-		schedule.trackedTitles(channel);
+			db.checkModule('epic').then(isActive => schedule.epic(isActive, channel));
+			db.checkModule('psplus').then(isActive => schedule.psplus(isActive, channel));
+			schedule.trackedTitles(channel);
+		});
 	});
 });
 
@@ -97,7 +97,7 @@ client.on('message', message => {
 	}
 	catch (error) {
 		console.error(error);
-		message.reply('There was an error trying to execute that command!');
+		return message.reply('There was an error trying to execute that command!');
 	}
 
 });

@@ -17,7 +17,12 @@ module.exports = {
 		freeEpicGames.map(async game => {
 
 			// Grab game information
-			const gameURL = process.env.epicStoreURL + game.productSlug.substring(0, game.productSlug.length - 5);
+			let gameURL = epicStoreURL;
+			if (game.productSlug.substring(game.productSlug.length - 5) === "/home")
+				gameURL += game.productSlug.substring(0, game.productSlug.length - 5);
+			else
+				gameURL += game.productSlug;
+
 			const { pages } = await fetch(gameURL).then(response => response.json());
 			const gamePage = pages.find(content => {
 				return content._title === 'home';

@@ -31,6 +31,7 @@ Monthly games given away for the PlayStation Plus membership can be posted using
 
 ### Game Tracking
 Use a number based menu to view, add, and remove tracked games. Games currently on sale are denoated with the `ON SALE` text.
+
 <img src="https://i.imgur.com/v1YYeDh.png" width=500>
 
 <img src="https://i.imgur.com/pOs3wJ4.png" width=400>

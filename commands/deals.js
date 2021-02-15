@@ -24,7 +24,7 @@ module.exports = {
 	guildOnly: true,
 	cooldown: 5,
 
-	execute(message, args, channel) {
+	async execute(message, args, channel) {
 
 		// Embed skeleton
 		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', configIcon);

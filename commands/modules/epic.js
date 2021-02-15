@@ -49,7 +49,8 @@ module.exports = {
 				.setColor('#FDFDFD')
 				.setThumbnail()
 				.setAuthor('Epic Games Store', epicIcon)
-				.setDescription(gamePage.data.about.shortDescription)
+				.setDescription(
+					gamePage.data.about.shortDescription ? gamePage.data.about.shortDescription : '')
 				.setImage(game.keyImages[0].url)
 				.addField('Developer', gamePage.data.meta.developer, true)
 				.addField('Publisher', gamePage.data.meta.publisher, true)

@@ -20,12 +20,12 @@ I decided to work on this project since I was looking to have a replacement for 
 
 ## Features
 ### Epic Games Free Games
-Weekly games given away by the Epic Games Store can be posted. Free game checks are defaulted to 1700 on Thursdays.
+Weekly games given away by the Epic Games Store can be posted.
 
 <img src="https://i.imgur.com/uBsdN1D.png" width=400>
 
 ### PlayStation Plus Free Games
-Monthly games given away for the PlayStation Plus membership can be posted using the official PlayStation Blog. Blog post checks are defaulted to every hour.
+Monthly games given away for the PlayStation Plus membership can be posted using articles from the official PlayStation Blog.
 
 <img src="https://i.imgur.com/sofGBr0.png" width=400>
 
@@ -41,7 +41,6 @@ Game sales will also be posted when they are first detected being on sale.
 <img src="https://i.imgur.com/ViHhh8E.png" width=400>
 
 At the moment only titles from the PlayStation Store and the Nintendo eShop can be tracked. Price checks are set in the config using a string compatible with [node-schedule](https://www.npmjs.com/package/node-schedule).
-\*_Feature still in development_
 
 ### Help Menu
 <img src="https://i.imgur.com/yDKQjLj.png" width=500>
@@ -78,5 +77,12 @@ Here is an explanation of the various config variables required for the bot to w
 
 Images seen in the above demo screenshots are used only for demonstrational purposes and are not distributed in the source code. Any logos belong to their respective owners.
 
-## License
-To-do
+## Dependencies
+This software uses the following dependencies which are distributed under their respective licenses:
+- [discord.js](https://github.com/discordjs/discord.js) - Apache-2.0 License
+- [dot-env](https://github.com/motdotla/dotenv) - BSD-2-Clause
+- [node-fetch](https://github.com/bitinn/node-fetch) - MIT
+- [node-schedule](https://github.com/node-schedule/node-schedule) - MIT
+- [pg](https://github.com/brianc/node-postgres) - MIT
+- [rss-parser](https://github.com/bobby-brennan/rss-parser) - MIT
+- [Sequelize](https://github.com/sequelize/sequelize) - MIT

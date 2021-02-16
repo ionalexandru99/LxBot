@@ -1,16 +1,16 @@
 const { Sequelize } = require('sequelize');
-const { dbDialect, dbName, dbUser, dbPass } = require('../../config.json');
+require('dotenv').config();
 
 let sequelize;
 
 if (process.env.DATABASE_URL)
     sequelize = new Sequelize(process.env.DATABASE_URL, {
         port: process.env.PORT,
-        dialect: 'postgres'
+        dialect: process.env.dbDialect
     });
 else
-    sequelize = new Sequelize(dbName, dbUser, dbPass, {
-        dialect: dbDialect
+    sequelize = new Sequelize(process.env.dbName, process.env.dbUser, process.env.dbPass, {
+        dialect: process.env.dbDialect
     });
 
 // Model definitions

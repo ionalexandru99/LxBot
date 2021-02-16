@@ -3,14 +3,13 @@ const schedule = require('./modules/schedule');
 const ps = require('./modules/ps');
 const nintendo = require('./modules/eshop');
 const db = require('./modules/dbInterface');
-const { prefix, configIcon } = require('../config.json');
+require('dotenv').config();
+const epic = require('./modules/epic');
 
-const commandPrefix = process.env.prefix || prefix;
-const commandIcon = process.env.configIcon || configIcon;
 
 module.exports = {
 	name: 'deals',
-	description: 'Deals for Games. Use the command `' + `${commandPrefix}deals` + '` with any of the following arguments for different actions:'
+	description: 'Deals for Games. Use the command `' + `${process.env.prefix}deals` + '` with any of the following arguments for different actions:'
 		+ '\n\n:gear: **Channel Management** :gear:'
 		+ '\n`activate`: Enable the current channel to use all deals commands in that channel (*Only one channel may be active at a time*)'
 		+ '\n`deactivate`: Disable the current channel to use any deals commands in that channel'
@@ -29,14 +28,14 @@ module.exports = {
 	async execute(message, args, channel) {
 
 		// Embed skeleton
-		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', commandIcon);
+		const configEmbed = new Discord.MessageEmbed().setAuthor('Tom Nook Configuration', process.env.configIcon);
 
 		// Embed for module management
 		function moduleEmbed(module, active) {
 			return (
 				new Discord.MessageEmbed()
 					.setTitle('Module Management')
-					.setAuthor('Tom Nook Configuration', commandIcon)
+					.setAuthor('Tom Nook Configuration', process.env.configIcon)
 					.setDescription(module.toUpperCase() + ' module is ' + (active ? 'activated' : 'deactivated') + '!')
 			);
 		}
@@ -106,7 +105,7 @@ module.exports = {
 				}
 				else if (args[0] === 'test') {
 					// Test argument
-					return
+					return epic.check(channel);
 				}
 				else if (args[0] === 'activate') {
 					// Activate current channel

@@ -1,10 +1,7 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const db = require('./dbInterface');
-const { psIcon, psStoreURL } = require('../../config.json');
-
-const storefrontURL = process.env.psStoreURL || psStoreURL;
-const storefrontIcon = process.env.psIcon || psIcon;
+require('dotenv').config();
 
 module.exports = {
 
@@ -20,7 +17,7 @@ module.exports = {
 				+ '\n 1) View tracked games'
 				+ '\n 2) Add a game'
 				+ '\n 3) Remove a game')
-			.setAuthor('PlayStation Deals', storefrontIcon);
+			.setAuthor('PlayStation Deals', process.env.psIcon);
 
 		// Embed for viewing list of tracked games
 		function viewGamesEmbed(list) {
@@ -72,7 +69,7 @@ module.exports = {
 		// Grab game info
 		async function getGameJSON(url) {
 			const gameUrl = url;
-			const { included } = await fetch(storefrontURL + gameUrl.substring(44)).then(response => response.json());
+			const { included } = await fetch(process.env.psStoreURL + gameUrl.substring(44)).then(response => response.json());
 			return included[0].attributes;
 		}
 

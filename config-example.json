@@ -1,16 +1,20 @@
 {
     "configIcon": "https://www.mariowiki.com/images/2/26/SMO_8bit_Mario_Builder.png",
+    "dbDialect": "your-db-dialect",
+    "dbName": "your-db-name",
+    "dbUser": "your-db-username",
+    "dbPass": "your-db-password",
     "epicFreeURL": "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=US&allowCountries=US",
     "epicGameURL": "https://www.epicgames.com/store/en-US/product/",
     "epicIcon": "https://pbs.twimg.com/profile_images/1273739401387036676/y3-FozWF.jpg",
     "epicStoreURL": "https://store-content.ak.epicgames.com/api/en-US/content/products/",
     "eshopImageURL": "https://www.nintendo.com/content/dam/noa/en_US/games/switch/s/",
+    "eshopIcon": "https://b.thumbs.redditmedia.com/-jmGJ20JxItsO6OwSfcZ_gIAOh-INXRxnU2ZcNS899s.png",
     "eshopURL": "https://api.ec.nintendo.com/v1/price?country=US&lang=en&ids=",
     "prefix": ".",
     "psIcon": "https://blog.playstation.com/tachyon/2019/03/pslogo.png",
     "psPlusIcon": "https://b.thumbs.redditmedia.com/3r51LlAuUH2WHeY1QicMEXc43DRS4FwWXM4oryRracQ.png",
     "psPlusURL": "https://blog.us.playstation.com/category/ps-plus/feed/",
     "psStoreURL": "https://store.playstation.com/valkyrie-api/en/US/999/resolve/",
-    "switchIcon": "https://b.thumbs.redditmedia.com/-jmGJ20JxItsO6OwSfcZ_gIAOh-INXRxnU2ZcNS899s.png",
-    "token": "insert-token-here"
+    "token": "insert-discord-token-here"
 }

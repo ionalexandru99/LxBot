@@ -1,9 +1,17 @@
-const { Sequelize, where } = require('sequelize');
+const { Sequelize } = require('sequelize');
+const { dbDialect, dbName, dbUser, dbPass } = require('../../config.json');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    port: process.env.PORT,
-    dialect: 'postgres'
-});
+let sequelize;
+
+if (process.env.DATABASE_URL)
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        port: process.env.PORT,
+        dialect: 'postgres'
+    });
+else
+    sequelize = new Sequelize(dbName, dbUser, dbPass, {
+        dialect: dbDialect
+    });
 
 // Model definitions
 const Channel = sequelize.define('channel', {

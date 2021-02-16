@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const db = require('./dbInterface');
+const { eshopIcon } = require('../../config.json');
+
+const storefrontIcon = process.env.switchIcon || eshopIcon;
 
 module.exports = {
 
@@ -16,7 +19,7 @@ module.exports = {
 				+ '\n 1) View tracked games'
 				+ '\n 2) Add a game'
 				+ '\n 3) Remove a game')
-			.setAuthor('Nintendo eShop Deals', process.env.switchIcon);
+			.setAuthor('Nintendo eShop Deals', storefrontIcon);
 
 		//Embed for viewing list of tracked games
 		function viewGamesEmbed(list) {

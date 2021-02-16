@@ -2,6 +2,10 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Parser = require('rss-parser');
 const db = require('./dbInterface');
+const { psPlusIcon, psPlusURL } = require('../../config.json');
+
+const feedURL = process.env.psPlusURL || psPlusURL;
+const programIcon = process.env.psPlusIcon || psPlusIcon;
 
 const parser = new Parser();
 
@@ -9,7 +13,7 @@ module.exports = {
 
 	async check(channel) {
 		//Grab latest article from RSS feed
-		const article = (await parser.parseURL(process.env.psPlusURL)).items[0];
+		const article = (await parser.parseURL(feedURL)).items[0];
 		const source = await fetch(article.link).then(response => response.text());
 
 		db.getPsPlus(article.link).then(articleSaved => {
@@ -27,7 +31,7 @@ module.exports = {
 					.setURL(article.link)
 					.setColor('#0099ff')
 					.setImage(imageURL)
-					.setAuthor('PlayStation Plus', process.env.psPlusIcon)
+					.setAuthor('PlayStation Plus', programIcon)
 					.setDescription(article.contentSnippet);
 
 				db.addPsPlus(article.link);

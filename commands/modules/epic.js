@@ -1,12 +1,17 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
+const { epicFreeURL, epicGameURL, epicIcon } = require('../../config.json');
+
+const storefrontURL = process.env.epicFreeURL || epicFreeURL;
+const gamePageURL = process.env.epicGameURL || epicGameURL;
+const storefrontIcon = process.env.epicIcon || epicIcon;
 
 module.exports = {
 
 	async check(channel) {
 
 		// Grab list of free weekly games from Epic
-		const { data } = await fetch(process.env.epicFreeURL).then(response => response.json());
+		const { data } = await fetch(storefrontURL).then(response => response.json());
 
 		// Remove games not yet available for free
 		const currentDate = new Date();
@@ -43,10 +48,10 @@ module.exports = {
 			// Create embed
 			const messageEmbed = new Discord.MessageEmbed()
 				.setTitle(game.title)
-				.setURL(process.env.epicGameURL + game.productSlug)
+				.setURL(gamePageURL + game.productSlug)
 				.setColor('#FDFDFD')
 				.setThumbnail()
-				.setAuthor('Epic Games Store', process.env.epicIcon)
+				.setAuthor('Epic Games Store', storefrontIcon)
 				.setDescription(gamePage.data.about.shortDescription)
 				.setImage(game.keyImages[0].url)
 				.addField('Developer', gamePage.data.meta.developer, true)

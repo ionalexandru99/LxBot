@@ -23,15 +23,6 @@ const Channel = sequelize.define('channel', {
 }, {
     freezeTableName: true,
 });
-const Module = sequelize.define('module', {
-    name: {
-        type: Sequelize.STRING,
-        unique: true,
-    },
-    enabled: Sequelize.BOOLEAN,
-}, {
-    freezeTableName: true,
-});
 const PSGame = sequelize.define('psgames', {
     title: {
         type: Sequelize.STRING,
@@ -81,29 +72,8 @@ module.exports = {
     // Set up database with initial tables
     async setUpDB() {
         await sequelize.sync();
-        await Module.findOrCreate(
-            {
-                where: {
-                    name: "epic",
-                },
-                defaults: {
-                    name: "epic",
-                    enabled: false,
-                }
-            },
-        );
-        await Module.findOrCreate(
-            {
-                where: {
-                    name: "psplus",
-                },
-                defaults: {
-                    name: "psplus",
-                    enabled: false,
-                }
-            },
-        );
     },
+
     // Get saved channel ID
     async getChannel() {
         const channel = await Channel.findOne();
@@ -146,30 +116,6 @@ module.exports = {
             console.log(error);
         }
 
-    },
-
-    // Check status of a module
-    async checkModule(moduleName) {
-        return await Module.findOne({ where: { 'name': moduleName } }).then(module => {
-            if (module) {
-                return module.getDataValue('enabled');
-            } else {
-                return null;
-            }
-        });
-    },
-    // Enable or disable a module
-    async manageModule(moduleName) {
-        return await Module.findOne({ where: { 'name': moduleName } }).then(module => {
-            if (module) {
-                module.setDataValue('enabled', !(module.getDataValue('enabled')));
-                module.save().catch(console.error);
-                return module.getDataValue('enabled');
-            } else {
-                return null;
-            }
-        }
-        );
     },
 
     // Get saved PS Plus article

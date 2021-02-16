@@ -1,4 +1,6 @@
 # Tom Nook Bot
+<img id="badge" src="https://david-dm.org/santoyoalfredo/Tom-Nook-Bot.svg" alt="badge" class="">
+
 This project is a Discord bot that can post to a channel within a server to announce new deals for free games available for PlayStation Plus. The bot can also check the Nintendo eShop and PlayStation Store for deals on tracked games.
 
 The project is currently being developed in the two branches as there is also a version that can be deployed to Heroku.

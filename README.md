@@ -14,8 +14,8 @@ I decided to work on this project since I was looking to have a replacement for 
 - `npm install`
 
 ## Usage
-- Create user and database using PostgreSQL
-- Modify `config-example.json` with database user and pass and rename the file `config.json`
+- Create user and database that is compatible with [Sequelize](https://sequelize.org/master/index.html)
+- Create `.env` using the example as a starting point
 - `node index.js`
 
 ## Features
@@ -50,6 +50,7 @@ At the moment only titles from the PlayStation Store and the Nintendo eShop can 
 Here is an explanation of the various config variables required for the bot to work:
 - `configIcon`: Icon for various setting menus
 - `DATABASE_URL`: Heroku database URL (Only needed for a Heroku instance)
+- `dbDialect`: Database dialect (Read the documentation for Sequelize)
 - `dbName`: Database name (Only needed for a local database)
 - `dbUser`: Database user (Only needed for a local database)
 - `dbPass`: Database user password (Only needed for a local database)
@@ -58,15 +59,14 @@ Here is an explanation of the various config variables required for the bot to w
 - `epicIcon`: Icon for an Epic Games post
 - `epicStoreURL`: Base URL that returns a JSON object of an Epic Games product
 - `eshopImageURL`: Base URL that returns a header image of a Nintendo product
+- `eshopIcon`: Icon for a Nintendo eShop post
 - `eshopURL`: Base URL that returns a JSON object of a Nintendo product
 - `prefix`: Prefix used for bot commands
 - `psIcon`: Icon for a PlayStation Store post
 - `psPlusIcon`: Icon for a PlayStation Plus post
 - `psPlusURL`: RSS feed for the PlayStation Plus articles
 - `psStoreURL`: Base URL that returns a JSON object of a PlayStation product
-- `switchIcon`: Icon for a Nintendo eShop post
 - `token`: Discord bot token
-
 
 ## Credits
 - Epic Games Store: https://www.epicgames.com/store/

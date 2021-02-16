@@ -40,7 +40,7 @@ Game sales will also be posted when they are first detected being on sale.
 
 <img src="https://i.imgur.com/ViHhh8E.png" width=400>
 
-At the moment only titles from the PlayStation Store and the Nintendo eShop can be tracked. Price checks are defaulted to 1700 GMT daily.
+At the moment only titles from the PlayStation Store and the Nintendo eShop can be tracked. Price checks are set in the config using a string compatible with [node-schedule](https://www.npmjs.com/package/node-schedule).
 \*_Feature still in development_
 
 ### Help Menu
@@ -66,6 +66,9 @@ Here is an explanation of the various config variables required for the bot to w
 - `psPlusIcon`: Icon for a PlayStation Plus post
 - `psPlusURL`: RSS feed for the PlayStation Plus articles
 - `psStoreURL`: Base URL that returns a JSON object of a PlayStation product
+- `scheduleEpic`: Schedule to search for the weekly freebies from Epic Games Store
+- `schedulePsPlus`: Schedule to search for the announcement of monthly PS Plus games
+- `scheduleTracked`: Schedule to check all tracked games from its digital storefront
 - `token`: Discord bot token
 
 ## Credits

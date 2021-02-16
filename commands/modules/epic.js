@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
-const { epicFreeURL, epicGameURL, epicIcon } = require('../../config.json');
+const { epicFreeURL, epicGameURL, epicStoreURL, epicIcon } = require('../../config.json');
 
-const storefrontURL = process.env.epicFreeURL || epicFreeURL;
+const feedURL = process.env.epicFreeURL || epicFreeURL;
+const storefrontURL = process.env.epicStoreURL || epicStoreURL;
 const gamePageURL = process.env.epicGameURL || epicGameURL;
 const storefrontIcon = process.env.epicIcon || epicIcon;
 
@@ -11,7 +12,7 @@ module.exports = {
 	async check(channel) {
 
 		// Grab list of free weekly games from Epic
-		const { data } = await fetch(storefrontURL).then(response => response.json());
+		const { data } = await fetch(feedURL).then(response => response.json());
 
 		// Remove games not yet available for free
 		const currentDate = new Date();
@@ -23,7 +24,7 @@ module.exports = {
 		freeEpicGames.map(async game => {
 
 			// Grab game information
-			let gameURL = epicStoreURL;
+			let gameURL = storefrontURL;
 			if (game.productSlug.substring(game.productSlug.length - 5) === "/home")
 				gameURL += game.productSlug.substring(0, game.productSlug.length - 5);
 			else

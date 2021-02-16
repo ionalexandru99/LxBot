@@ -24,8 +24,8 @@ client.once('ready', () => {
 		db.getChannel().then(id => {
 			const channel = client.channels.cache.get(id);
 
-			db.checkModule('epic').then(isActive => schedule.epic(isActive, channel));
-			db.checkModule('psplus').then(isActive => schedule.psplus(isActive, channel));
+			schedule.epic(channel);
+			schedule.psplus(channel);
 			schedule.trackedTitles(channel);
 		});
 	});

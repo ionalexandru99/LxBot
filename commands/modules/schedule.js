@@ -2,60 +2,60 @@ const schedule = require('node-schedule');
 const epic = require('./epic');
 const psplus = require('./psplus');
 const updater = require('./update');
-
-let epicSchedule;
-let psPlusSchedule;
+require('dotenv').config();
 
 module.exports = {
 
     // Scheduling for Epic Games module
-    epic(active, channel) {
-        if (active) {
-            // Turn on schedule if enabled
-            epicSchedule = schedule.scheduleJob('0 17 * * 4', function () {
-                // Checks Thursdays at 12:00
+    epic(channel) {
+        if (process.env.scheduleEpic !== '') {
+            // Turn on schedule
+            const epicSchedule = schedule.scheduleJob(process.env.scheduleEpic, function () {
                 epic.check(channel);
             });
-            console.log('Epic Games schedule on');
-        } else if (!active) {
-            // Turn off schedule if disabled
-            if (epicSchedule) {
-                epicSchedule.cancel();
-            }
-            console.log('Epic Games schedule off');
+            if (epicSchedule)
+                console.log('Epic Games schedule on');
+            else
+                console.log("Epic Games schedule incorrectly configured")
         } else {
-            console.error();
+            // Schedule off
+            console.log('Epic Games schedule off');
         }
     },
     // Scheduling for PlayStation Plus module
-    psplus(active, channel) {
-        if (active) {
-            // Turn on schedule if enabled
-            psPlusSchedule = schedule.scheduleJob('0 * * * *', function () {
-                // Checks every hour
+    psplus(channel) {
+        if (process.env.schedulePsPlus !== '') {
+            // Turn on schedule
+            const psPlusSchedule = schedule.scheduleJob(process.env.schedulePsPlus, function () {
                 psplus.check(channel);
             });
-            console.log('PlayStation Plus schedule on');
-        } else if (!active) {
-            // Turn off schedule if disabled
-            if (psPlusSchedule) {
-                psPlusSchedule.cancel();
-            }
-            console.log('PlayStation Plus schedule off');
+            if (psPlusSchedule)
+                console.log('PlayStation Plus schedule on');
+            else
+                console.log("PlayStation Plus schedule incorrectly configured")
         } else {
-            console.error();
+            // Schedule off
+            console.log('PlayStation Plus schedule off');
         }
     },
     // Scheduling for tracked titles
     trackedTitles(channel) {
-        gamesSchedule = schedule.scheduleJob('0 17 * * *', () => {
-            // Check every hour
-            console.log('Checking for sale updates for tracked PS titles...');
-            updater.psUpdate(channel).then(() => console.log('PS update complete!'));
+        if (process.env.scheduleTracked !== '') {
+            // Turn on schedule
+            const trackedSchedule = schedule.scheduleJob(process.env.scheduleTracked, () => {
+                console.log('Checking for sale updates for tracked PS titles...');
+                updater.psUpdate(channel).then(() => console.log('PS update complete!'));
 
-            console.log('Checking for sale updates for tracked eShop titles...');
-            updater.eshopUpdate(channel).then(() => console.log('eShop update complete!'));
-        });
-        console.log('Tracked Games schedule on');
+                console.log('Checking for sale updates for tracked eShop titles...');
+                updater.eshopUpdate(channel).then(() => console.log('eShop update complete!'));
+            });
+            if (trackedSchedule)
+                console.log('Tracked Games schedule on');
+            else
+                console.log("Tracked Games schedule incorrectly configured")
+        } else {
+            // Schedule off
+            console.log('Tracked Games schedule off');
+        }
     },
 };

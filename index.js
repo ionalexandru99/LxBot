@@ -2,7 +2,10 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const db = require('./commands/modules/dbInterface');
 const schedule = require('./commands/modules/schedule');
-const { prefix, token } = require('./config.json');
+const config = require('./config.json');
+
+const prefix = process.env.prefix || config.prefix;
+const token = process.env.token || config.token;
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();

@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
-const { configIcon, prefix } = require('../config.json');
+const { prefix, configIcon } = require('../config.json');
+
+const commandPrefix = process.env.prefix || prefix;
+const commandIcon = process.env.configIcon || configIcon;
 
 module.exports = {
 	name: 'help',
@@ -14,13 +17,13 @@ module.exports = {
 		// Embed skeleton
 		const helpEmbed = new Discord.MessageEmbed()
 			.setTitle('Commands')
-			.setAuthor('Tom Nook\'s Help Desk', configIcon);
+			.setAuthor('Tom Nook\'s Help Desk', commandIcon);
 
 		// Grab all commands for default message
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
 			data.push(commands.map(command => command.name).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+			data.push(`\nYou can send \`${commandPrefix}help [command name]\` to get info on a specific command!`);
 
 			helpEmbed.setDescription(data);
 			return message.channel.send(helpEmbed);
@@ -40,7 +43,7 @@ module.exports = {
 
 		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
 		if (command.description) data.push(`**Description:** ${command.description}`);
-		if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+		if (command.usage) data.push(`**Usage:** ${commandPrefix}${command.name} ${command.usage}`);
 
 		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 

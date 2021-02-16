@@ -1,9 +1,17 @@
-const { Sequelize, where } = require('sequelize');
-const { dbName, dbUser, dbPass } = require('../../config.json');
+const { Sequelize } = require('sequelize');
+const { dbDialect, dbName, dbUser, dbPass } = require('../../config.json');
 
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    dialect: 'postgres'
-});
+let sequelize;
+
+if (process.env.DATABASE_URL)
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        port: process.env.PORT,
+        dialect: 'postgres'
+    });
+else
+    sequelize = new Sequelize(dbName, dbUser, dbPass, {
+        dialect: dbDialect
+    });
 
 // Model definitions
 const Channel = sequelize.define('channel', {
@@ -121,6 +129,7 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+
     },
     // Delete channel ID
     async deleteChannel() {
@@ -136,6 +145,7 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+
     },
 
     // Check status of a module
@@ -171,6 +181,7 @@ module.exports = {
             return '';
         }
     },
+    // Save PS Plus article
     async addPsPlus(url) {
         PSPlus.create({
             url: url,

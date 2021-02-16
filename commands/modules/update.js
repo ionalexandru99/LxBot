@@ -1,7 +1,13 @@
 const Discord = require('discord.js');
 const db = require('./dbInterface');
 const fetch = require('node-fetch');
-const { psIcon, psStoreURL, switchIcon, eshopURL, eshopImageURL } = require('../../config.json');
+const config = require('../../config.json');
+
+const eshopURL = process.env.eshopURL || config.eshopURL;
+const eshopImageURL = process.env.eshopImageURL || config.eshopImageURL;
+const eshopIcon = process.env.eshopIcon || config.eshopIcon;
+const psStoreURL = process.env.psStoreURL || config.psStoreURL;
+const psIcon = process.env.psIcon || config.psIcon;
 
 module.exports = {
 
@@ -12,7 +18,7 @@ module.exports = {
             gamesToCheck.forEach(async function (game) {
 
                 //Grab price info
-                const { included } = await fetch(process.env.psStoreURL + game.url.substring(44))
+                const { included } = await fetch(psStoreURL + game.url.substring(44))
                     .then(response => response.json())
                     .catch(console.error);
                 const contentInfo = included[0].attributes;

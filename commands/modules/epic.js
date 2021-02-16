@@ -16,7 +16,8 @@ module.exports = {
 		// Remove games not yet available for free
 		const currentDate = new Date();
 		const freeEpicGames = data.Catalog.searchStore.elements.filter(game => {
-			return game.promotions.promotionalOffers.length > 0;
+			if (game.promotions)
+				return (game.promotions.promotionalOffers.length > 0) ? true : false;
 		});
 
 		freeEpicGames.map(async game => {
@@ -52,7 +53,8 @@ module.exports = {
 				.setColor('#FDFDFD')
 				.setThumbnail()
 				.setAuthor('Epic Games Store', storefrontIcon)
-				.setDescription(gamePage.data.about.shortDescription)
+				.setDescription(
+					gamePage.data.about.shortDescription ? gamePage.data.about.shortDescription : '')
 				.setImage(game.keyImages[0].url)
 				.addField('Developer', gamePage.data.meta.developer, true)
 				.addField('Publisher', gamePage.data.meta.publisher, true)

@@ -181,7 +181,7 @@ module.exports = {
             return '';
         }
     },
-    // Update saved PS Plus article
+    // Save PS Plus article
     async addPsPlus(url) {
         PSPlus.create({
             url: url,

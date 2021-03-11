@@ -18,6 +18,7 @@ module.exports = {
 
 		freeEpicGames.map(async game => {
 
+			console.log(game.keyImages[0].url);
 			// Grab game information
 			let gameURL = process.env.epicStoreURL;
 			if (game.productSlug.substring(game.productSlug.length - 5) === "/home")
@@ -51,7 +52,7 @@ module.exports = {
 				.setAuthor('Epic Games Store', process.env.epicIcon)
 				.setDescription(
 					gamePage.data.about.shortDescription ? gamePage.data.about.shortDescription : '')
-				.setImage(game.keyImages[0].url)
+				.setImage(encodeURI(game.keyImages[0].url))
 				.addField('Developer', gamePage.data.meta.developer, true)
 				.addField('Publisher', gamePage.data.meta.publisher, true)
 				.addField('Tags', tags.join(', '), true)

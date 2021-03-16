@@ -6,7 +6,13 @@ let sequelize;
 if (process.env.DATABASE_URL)
     sequelize = new Sequelize(process.env.DATABASE_URL, {
         port: process.env.PORT,
-        dialect: process.env.dbDialect
+        dialect: process.env.dbDialect,
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        },
     });
 else
     sequelize = new Sequelize(process.env.dbName, process.env.dbUser, process.env.dbPass, {

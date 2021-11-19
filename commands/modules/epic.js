@@ -58,7 +58,7 @@ module.exports = {
 				.addField('Tags', tags.join(', '), true)
 				.setFooter('Free until ' + endDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
 
-			channel.send(messageEmbed);
+			return channel.send(messageEmbed);
 		});
 	},
 };

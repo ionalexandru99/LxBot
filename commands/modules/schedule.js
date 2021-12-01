@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const epic = require('./epic');
 const psplus = require('./psplus');
+const gampeass = require('./gamepass');
 const updater = require('./update');
 require('dotenv').config();
 
@@ -36,6 +37,22 @@ module.exports = {
         } else {
             // Schedule off
             console.log('PlayStation Plus schedule off');
+        }
+    },
+    // Scheduling for Xbox Game Pass module
+    gamepass(channel) {
+        if (process.env.scheduleGamePass !== '') {
+            // Turn on schedule
+            const gamePassSchedule = schedule.scheduleJob(process.env.scheduleGamePass, function () {
+                gamepass.check(channel);
+            });
+            if (gamePassSchedule)
+                console.log('Xbox Game Pass schedule on');
+            else
+                console.log("Xbox Game Pass schedule incorrectly configured")
+        } else {
+            // Schedule off
+            console.log('Xbox Game Pass schedule off');
         }
     },
     // Scheduling for tracked titles

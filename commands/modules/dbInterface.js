@@ -63,6 +63,14 @@ const PSPlus = sequelize.define('psplus', {
 }, {
     freezeTableName: true,
 });
+const GamePass = sequelize.define('gamepass', {
+    url: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
+}, {
+    freezeTableName: true,
+});
 
 module.exports = {
 
@@ -206,6 +214,22 @@ module.exports = {
         } else {
             return '';
         }
+    },
+
+    // Get saved Game Pass article
+    async getGamePass(url) {
+        const savedArticle = await GamePass.findOne({ where: { url: url } }).catch(console.error);
+        if (savedArticle) {
+            return savedArticle.getDataValue('url');
+        } else {
+            return '';
+        }
+    },
+    // Save Game Pass article
+    async addGamePass(url) {
+        GamePass.create({
+            url: url,
+        }).catch(console.error);
     },
 
     // Grab list of tracked titles to check

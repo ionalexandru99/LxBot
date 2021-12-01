@@ -4,6 +4,7 @@ const ps = require('./modules/ps');
 const psplus = require('./modules/psplus');
 const nintendo = require('./modules/eshop');
 const db = require('./modules/dbInterface');
+const gamepass = require('./modules/gamepass');
 require('dotenv').config();
 
 module.exports = {
@@ -14,6 +15,7 @@ module.exports = {
 		+ '\n`deactivate`: Disable the current channel to use any deals commands in that channel'
 		+ '\n\n:video_game: **Game Sales Tracking** :video_game:'
 		+ '\n`epic`: Force check for free weekly games from Epic Games Store'
+		+ '\n`gamepass` or `gp`: Force check for Xbox Game Pass games'
 		+ '\n`ps`: View, Add, or Delete titles from the PlayStation Store to be tracked for sales'
 		+ '\n`psplus` or `ps+`: Force check for monthly PS Plus games'
 		+ '\n`eshop`: View, Add, or Delete titles from the Nintendo eShop to be tracked for sales'
@@ -80,6 +82,10 @@ module.exports = {
 				else if (args[0] === 'eshop') {
 					// Nintendo eShop Menu
 					return nintendo.menu(message, channel);
+				}
+				else if (args[0] === 'gamepass' || args[0] === 'gp') {
+					// Force Xbox Game Pass check
+					return gamepass.check(channel);
 				}
 				else if (args[0] === 'epic') {
 					// Force Epic Games check

@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 const epic = require('./epic');
 const psplus = require('./psplus');
-const gampeass = require('./gamepass');
+const gamepass = require('./gamepass');
 const updater = require('./update');
 require('dotenv').config();
 

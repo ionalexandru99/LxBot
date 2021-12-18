@@ -11,8 +11,9 @@ module.exports = {
 
 		// Remove games not yet available for free
 		const freeEpicGames = data.Catalog.searchStore.elements.filter(game => {
-			if (game.promotions)
-				return (game.promotions.promotionalOffers.length > 0) ? true : false;
+			if (game.promotions !== null)
+				if (game.promotions.promotionalOffers.length > 0)
+					return (game.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage == 0) ? true : false;
 		});
 
 		freeEpicGames.map(async game => {

@@ -15,9 +15,14 @@ if (process.env.DATABASE_URL)
         },
     });
 else
-    sequelize = new Sequelize(process.env.dbName, process.env.dbUser, process.env.dbPass, {
-        dialect: process.env.dbDialect
-    });
+    sequelize = new Sequelize({
+        dialect: process.env.dbDialect,
+        storage: './database.sqlite'
+      });
+    
+    // new Sequelize(process.env.dbName, process.env.dbUser, process.env.dbPass, {
+    //     dialect: 
+    // });
 
 // Model definitions
 const Channel = sequelize.define('channel', {

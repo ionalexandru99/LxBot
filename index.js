@@ -24,7 +24,7 @@ client.once('ready', () => {
 		db.getChannel().then(id => {
 			const channel = client.channels.cache.get(id);
 
-			schedule.epic(channel);
+			//schedule.epic(channel);
 			schedule.gamepass(channel);
 			schedule.psplus(channel);
 			schedule.trackedTitles(channel);

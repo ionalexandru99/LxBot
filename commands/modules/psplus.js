@@ -18,7 +18,7 @@ module.exports = {
 
 				// Grab article image
 				const imageStart = source.search('<div class="post-single__featured-asset">');
-				let imageURL = source.substring(imageStart + 79);
+				let imageURL = source.substring(imageStart + 100);
 				const imageEnd = imageURL.search('"');
 				imageURL = imageURL.substring(0, imageEnd);
 
@@ -32,6 +32,10 @@ module.exports = {
 					.setDescription(article.contentSnippet);
 
 				db.addPsPlus(article.link);
+
+                console.log(channel);
+                console.log(messageEmbed);
+
 				return channel.send(messageEmbed);
 			}
 		})

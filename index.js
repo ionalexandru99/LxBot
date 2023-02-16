@@ -21,15 +21,13 @@ client.once('ready', () => {
 	console.log('Ready!');
 	db.testDB();
 	db.setUpDB().then(() => {
-		db.getChannel().then(id => {
-			const channel = client.channels.cache.get(id);
-
-			//schedule.epic(channel);
-			schedule.gamepass(channel);
-			schedule.psplus(channel);
-			schedule.trackedTitles(channel);
-		});
-	});
+        client.channels.fetch('1071133765365149736').then((channel) => {
+            //schedule.epic(channel);
+            schedule.gamepass(channel);
+            schedule.psplus(channel);
+            schedule.trackedTitles(channel);
+        })
+	})
 });
 
 // console.log(client.commands);

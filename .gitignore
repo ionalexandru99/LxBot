@@ -103,3 +103,8 @@ dist
 # TernJS port file
 .tern-port
 config.json
+.idea
+.DS_Store
+**/obj
+GameAnnouncer/appsettings.Development.json
+**/bin

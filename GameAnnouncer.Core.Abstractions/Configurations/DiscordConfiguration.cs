@@ -6,4 +6,5 @@ namespace GameAnnouncer.Core.Abstractions.Configurations;
 public class DiscordConfiguration : IReadConfiguration
 {
     public required string Token { get; set; }
+    public required  string Name { get; set; }
 }

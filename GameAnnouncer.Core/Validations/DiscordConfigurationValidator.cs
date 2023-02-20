@@ -10,5 +10,9 @@ public class DiscordConfigurationValidator : AbstractValidator<DiscordConfigurat
         RuleFor(x => x.Token)
             .NotNull()
             .NotEmpty();
+
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .NotNull();
     }
 }
